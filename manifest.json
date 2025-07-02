@@ -1,8 +1,8 @@
 {
   "name": "Alliballi",
   "short_name": "Alliballi",
-  "scope": "https://alliballi.com/",
-  "start_url": ".",
+  "start_url": "/index.html",
+  "scope": "/",
   "display": "fullscreen",
   "theme_color": "#000000",
   "background_color": "#ffffff",
