@@ -1,7 +1,7 @@
 {
-  "name": "My PWA Demo",
-  "short_name": "PWA",
-  "scope": "http://192.168.68.60:5500/index.html",
+  "name": "Alliballi",
+  "short_name": "Alliballi",
+  "scope": "https://alliballi.com/",
   "start_url":"/?standalone=1",
   "display": "standalone",
   "background_color": "#ffffff",

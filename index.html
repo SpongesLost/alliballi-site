@@ -19,18 +19,5 @@
   <h1>Hej Alli! Love you ❤️</h1>
   <p>Ikke vær for sur, det var altså virkelig billigt</p>
   <script src="app.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js')
-          .then(registration => {
-            console.log('Service Worker registered with scope:', registration.scope);
-          })
-          .catch(error => {
-            console.error('Service Worker registration failed:', error);
-          });
-      });
-    }
-  </script>
 </body>
 </html>
