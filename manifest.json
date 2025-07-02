@@ -2,10 +2,10 @@
   "name": "Alliballi",
   "short_name": "Alliballi",
   "scope": "https://alliballi.com/",
-  "start_url":"/?standalone=1",
-  "display": "standalone",
-  "background_color": "#ffffff",
+  "start_url": ".",
+  "display": "fullscreen",
   "theme_color": "#000000",
+  "background_color": "#ffffff",
   "icons": [
     {
       "src": "icons/icon-256.png",
