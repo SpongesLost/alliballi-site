@@ -1,10 +1,10 @@
 
-const CACHE_NAME = "pwa-cache-v1";
+const CACHE_NAME = "pwa-cache-v2";
 const urlsToCache = [
   "/", 
   "/index.html", 
   "/style.css", 
-  "/js/sw-update.js",
+  "/sw-update.js",
   "/js/storage.js",
   "/js/program-manager.js",
   "/js/ui-manager.js",
@@ -19,11 +19,15 @@ self.addEventListener("install", (e) => {
   console.log("Service Worker: Install");
   e.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log("Service Worker: Caching Files");
+      console.log("Service Worker: Caching Files", urlsToCache);
       return cache.addAll(urlsToCache);
     }).then(() => {
+      console.log("Service Worker: All files cached successfully");
       // Force the waiting service worker to become the active service worker
       return self.skipWaiting();
+    }).catch((error) => {
+      console.error("Service Worker: Failed to cache files", error);
+      throw error;
     })
   );
 });

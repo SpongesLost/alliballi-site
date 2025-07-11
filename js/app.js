@@ -73,12 +73,5 @@ function deleteProgram(programId) {
 function exitWorkout() {
     window.workoutManager.exitWorkout();
 }
-
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js")
-    .then(() => console.log("✅ Service Worker registered"))
-    .catch(err => console.error("❌ SW registration failed", err));
-}
-
 // Initialize the application
 window.app = new FitnessApp();

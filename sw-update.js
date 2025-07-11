@@ -9,17 +9,20 @@ class PWAUpdater {
   async init() {
     if ('serviceWorker' in navigator) {
       try {
+        console.log('PWAUpdater: Registering service worker...');
         this.registration = await navigator.serviceWorker.register('/service-worker.js');
-        console.log('Service Worker registered successfully');
+        console.log('PWAUpdater: Service Worker registered successfully', this.registration);
         
         // Listen for updates
         this.registration.addEventListener('updatefound', () => {
-          console.log('New service worker found');
+          console.log('PWAUpdater: New service worker found');
           const newWorker = this.registration.installing;
           
           newWorker.addEventListener('statechange', () => {
+            console.log('PWAUpdater: Service worker state changed to', newWorker.state);
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
               // New service worker installed and there's an existing one
+              console.log('PWAUpdater: Showing update prompt');
               this.showUpdatePrompt();
             }
           });
@@ -27,6 +30,7 @@ class PWAUpdater {
 
         // Listen for the controlling service worker changing
         navigator.serviceWorker.addEventListener('controllerchange', () => {
+          console.log('PWAUpdater: Controller changed, refreshing page');
           if (this.refreshing) return;
           this.refreshing = true;
           window.location.reload();
@@ -40,13 +44,16 @@ class PWAUpdater {
         // Check for updates when the page becomes visible
         document.addEventListener('visibilitychange', () => {
           if (!document.hidden) {
+            console.log('PWAUpdater: Page became visible, checking for updates');
             this.checkForUpdates();
           }
         });
 
       } catch (error) {
-        console.error('Service Worker registration failed:', error);
+        console.error('PWAUpdater: Service Worker registration failed:', error);
       }
+    } else {
+      console.warn('PWAUpdater: Service workers not supported');
     }
   }
 
