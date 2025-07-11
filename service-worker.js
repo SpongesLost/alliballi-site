@@ -1,12 +1,9 @@
-
-const CACHE_NAME = "pwa-cache-v4";
-const BUILD_TIME = "2026-07-11T12:00:00Z"; // Update this timestamp when deploying
+const CACHE_NAME = "pwa-cache-v5"; // Bump version to force update
+const BUILD_TIME = "2026-07-12T10:30:00Z"; // Update this timestamp when deploying
 const urlsToCache = [
-  "/", 
-  "/index.html", 
-  "/style.css", 
+  "/style.css",
   "/js/storage.js",
-  "/js/program-manager.js",
+  "/js/program-manager.js", 
   "/js/ui-manager.js",
   "/js/drag-drop-handler.js",
   "/js/program-editor.js",
@@ -58,18 +55,43 @@ self.addEventListener("fetch", (e) => {
     return;
   }
 
+  // Network-first strategy for HTML files (including index.html and root)
+  if (e.request.destination === 'document' || 
+      e.request.url.endsWith('/') || 
+      e.request.url.endsWith('.html')) {
+    
+    e.respondWith(
+      fetch(e.request).then((response) => {
+        // If network request succeeds, cache and return it
+        if (response && response.status === 200) {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(e.request, responseToCache);
+          });
+        }
+        return response;
+      }).catch(() => {
+        // If network fails, try to serve from cache
+        return caches.match(e.request);
+      })
+    );
+    return;
+  }
+
+  // Cache-first strategy for static assets (CSS, JS, etc.)
   e.respondWith(
     caches.match(e.request).then((response) => {
-      // Return cached version or fetch from network
-      return response || fetch(e.request).then((fetchResponse) => {
-        // Check if we received a valid response
+      if (response) {
+        return response; // Serve from cache
+      }
+      
+      // If not in cache, fetch from network and cache
+      return fetch(e.request).then((fetchResponse) => {
         if (!fetchResponse || fetchResponse.status !== 200 || fetchResponse.type !== 'basic') {
           return fetchResponse;
         }
 
-        // Clone the response
         const responseToCache = fetchResponse.clone();
-
         caches.open(CACHE_NAME).then((cache) => {
           cache.put(e.request, responseToCache);
         });

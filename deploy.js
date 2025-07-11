@@ -4,47 +4,53 @@
 const fs = require('fs');
 const path = require('path');
 
-const serviceWorkerPath = path.join(__dirname, 'service-worker.js');
-const buildTime = new Date().toISOString();
-
-// Read service worker file
-let content = fs.readFileSync(serviceWorkerPath, 'utf8');
-
-// Update build timestamp
-content = content.replace(
-  /const BUILD_TIME = ".*";/,
-  `const BUILD_TIME = "${buildTime}";`
-);
-
-// Extract current cache version and increment it
-const versionMatch = content.match(/const CACHE_NAME = "pwa-cache-v(\d+)";/);
-if (versionMatch) {
-  const currentVersion = parseInt(versionMatch[1]);
-  const newVersion = currentVersion + 1;
-  content = content.replace(
-    /const CACHE_NAME = "pwa-cache-v\d+";/,
-    `const CACHE_NAME = "pwa-cache-v${newVersion}";`
+function updateServiceWorker() {
+  const swPath = path.join(__dirname, 'service-worker.js');
+  const htmlPath = path.join(__dirname, 'index.html');
+  
+  // Read service worker file
+  let swContent = fs.readFileSync(swPath, 'utf8');
+  
+  // Update build time
+  const now = new Date().toISOString();
+  swContent = swContent.replace(
+    /const BUILD_TIME = ".*?";/, 
+    `const BUILD_TIME = "${now}";`
   );
-  console.log(`✅ Updated cache version from v${currentVersion} to v${newVersion}`);
+  
+  // Extract current version number and increment
+  const versionMatch = swContent.match(/const CACHE_NAME = "pwa-cache-v(\d+)";/);
+  if (versionMatch) {
+    const currentVersion = parseInt(versionMatch[1]);
+    const newVersion = currentVersion + 1;
+    swContent = swContent.replace(
+      /const CACHE_NAME = "pwa-cache-v\d+";/,
+      `const CACHE_NAME = "pwa-cache-v${newVersion}";`
+    );
+  }
+  
+  // Write updated service worker
+  fs.writeFileSync(swPath, swContent);
+  
+  // Update sw-update.js version in HTML
+  let htmlContent = fs.readFileSync(htmlPath, 'utf8');
+  const versionParamMatch = htmlContent.match(/sw-update\.js\?v=(\d+)/);
+  if (versionParamMatch) {
+    const currentSwVersion = parseInt(versionParamMatch[1]);
+    const newSwVersion = currentSwVersion + 1;
+    htmlContent = htmlContent.replace(
+      /sw-update\.js\?v=\d+/,
+      `sw-update.js?v=${newSwVersion}`
+    );
+  }
+  
+  // Write updated HTML
+  fs.writeFileSync(htmlPath, htmlContent);
+  
+  console.log('✅ Service worker updated successfully!');
+  console.log('📦 Cache version bumped');
+  console.log('🔄 sw-update.js version bumped');
+  console.log('🕐 Build time updated to:', now);
 }
 
-// Update sw-update.js version in index.html
-const indexPath = path.join(__dirname, 'index.html');
-let indexContent = fs.readFileSync(indexPath, 'utf8');
-const swVersionMatch = indexContent.match(/sw-update\.js\?v=(\d+)/);
-if (swVersionMatch) {
-  const currentSwVersion = parseInt(swVersionMatch[1]);
-  const newSwVersion = currentSwVersion + 1;
-  indexContent = indexContent.replace(
-    /sw-update\.js\?v=\d+/,
-    `sw-update.js?v=${newSwVersion}`
-  );
-  fs.writeFileSync(indexPath, indexContent);
-  console.log(`✅ Updated sw-update.js version from v${currentSwVersion} to v${newSwVersion}`);
-}
-
-// Write updated service worker
-fs.writeFileSync(serviceWorkerPath, content);
-
-console.log(`✅ Updated build timestamp to: ${buildTime}`);
-console.log('🚀 Ready for deployment!');
+updateServiceWorker();
