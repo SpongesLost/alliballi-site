@@ -682,6 +682,10 @@ input[type=number] {
 @keyframes workoutFadeIn {
     from { opacity: 0; transform: translateX() translateY(20px); }
     to { opacity: 1; transform: translateX() translateY(0); }
+}
+
+.workout-controls {
+    display: flex;
     gap: 10px;
     margin-top: 20px;
 }
@@ -745,7 +749,17 @@ input[type=number] {
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
-/* (Consolidated above: removed duplicate rules for number input spinners) */
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+/* ===== MOBILE RESPONSIVENESS ===== */
+@media (max-width: 480px) {
+    .container {
         padding: 0;
     }
     
