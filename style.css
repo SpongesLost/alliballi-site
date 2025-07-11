@@ -27,9 +27,6 @@ body {
     overflow-y: auto;
 }
 
-.hidden {
-    display: none;
-}
 
 /* ===== HEADER & NAVIGATION ===== */
 .header {
@@ -53,6 +50,7 @@ body {
 }
 
 .tab-btn {
+    -webkit-tap-highlight-color: transparent;
     padding: 8px 16px;
     background: transparent;
     border: 2px solid #48484a;
@@ -71,6 +69,7 @@ body {
 
 /* ===== BUTTONS ===== */
 .btn {
+    -webkit-tap-highlight-color: transparent;
     padding: 12px 24px;
     background: #007aff;
     color: white;
@@ -683,10 +682,6 @@ input[type=number] {
 @keyframes workoutFadeIn {
     from { opacity: 0; transform: translateX() translateY(20px); }
     to { opacity: 1; transform: translateX() translateY(0); }
-}
-
-.workout-controls {
-    display: flex;
     gap: 10px;
     margin-top: 20px;
 }
@@ -743,24 +738,14 @@ input[type=number] {
 
 /* ===== UTILITY CLASSES ===== */
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 /* Remove number input spinners */
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
-    margin: 0;
-}
-
-input[type=number] {
-    -moz-appearance: textfield;
-    appearance: textfield;
-}
-
-/* ===== MOBILE RESPONSIVENESS ===== */
-@media (max-width: 480px) {
-    .container {
+/* (Consolidated above: removed duplicate rules for number input spinners) */
         padding: 0;
     }
     
