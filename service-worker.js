@@ -1,5 +1,5 @@
-const CACHE_NAME = "pwa-cache-v6"; // Bump version to force update
-const BUILD_TIME = "2025-07-11T23:16:47.878Z"; // Update this timestamp when deploying
+const CACHE_NAME = "pwa-cache-v7"; // Bump version to force update
+const BUILD_TIME = "2025-07-11T23:19:31.724Z"; // Update this timestamp when deploying
 const urlsToCache = [
   "/style.css",
   "/js/storage.js",
