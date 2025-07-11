@@ -10,13 +10,110 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <!-- possible values: default, black or black-translucent -->
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Alliballi</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Fitness Tracker</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <h1>Hej Alli! Love you ❤️</h1>
-  <p>Ikke vær for sur, det var altså virkelig billigt</p>
-  <script src="app.js"></script>
+    <div class="container">
+        <div class="header">
+            <h1>Fitness Tracker</h1>
+            <div class="tab-nav">
+                <button class="tab-btn active" onclick="showTab('programs', event)">Programs</button>
+                <button class="tab-btn" onclick="showTab('create', event)">Create</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Programs Tab -->
+            <div id="programs-tab" class="tab-content">
+                <div id="programs-list" class="programs-grid">
+                    <!-- Programs will be populated here -->
+                </div>
+            </div>
+
+            <!-- Create Program Tab -->
+            <div id="create-tab" class="tab-content hidden">
+                <div class="program-form">
+                    <div id="edit-indicator" class="edit-header hidden">
+                        Editing Program
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="program-name">Program Name</label>
+                        <input type="text" id="program-name" placeholder="Enter program name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="exercise-select">Add Exercise</label>
+                        <select id="exercise-select" required>
+                            <option value="" disabled selected hidden>Select exercise</option>
+                            <option value="Push-ups">Push-ups</option>
+                            <option value="Squats">Squats</option>
+                            <option value="Bench Press">Bench Press</option>
+                            <option value="Deadlift">Deadlift</option>
+                            <option value="Pull-ups">Pull-ups</option>
+                            <option value="Overhead Press">Overhead Press</option>
+                            <option value="Barbell Rows">Barbell Rows</option>
+                            <option value="Lunges">Lunges</option>
+                            <option value="Bicep Curls">Bicep Curls</option>
+                            <option value="Tricep Dips">Tricep Dips</option>
+                            <option value="Plank">Plank</option>
+                            <option value="Mountain Climbers">Mountain Climbers</option>
+                        </select>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: center;">
+                        <div class="exercise-input-group">
+                            <div class="form-group sets-input">
+                                <label for="sets-input">Sets</label>
+                                <input type="number" id="sets-input" placeholder="3" min="1" max="10" value="3">
+                            </div>
+                            <div class="form-group rep-range-input">
+                            <label>Rep Range</label>
+                            <div class="rep-range-container">
+                                <input type="number" id="rep-min-input" placeholder="8" min="1" max="100" value="8">
+                                <span class="rep-range-separator">-</span>
+                                <input type="number" id="rep-max-input" placeholder="12" min="1" max="100" value="12">
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <button class="btn btn-secondary" onclick="addExercise()">Add Exercise</button>
+                    
+                    <div id="exercise-list" class="exercise-list" style="display: none;">
+                        <h3>Exercises in Program:</h3>
+                        <div id="exercises-container"></div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn" onclick="saveProgram()" id="save-btn">Save Program</button>
+                        <button class="btn btn-secondary hidden" onclick="cancelEdit()" id="cancel-btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workout Mode -->
+            <div id="workout-tab" class="tab-content hidden">
+                <div class="workout-container">
+                    <div class="progress-indicator" id="progress-indicator"></div>
+                    <div class="exercise-card" id="exercise-card">
+                        <!-- Exercise content will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Load modules in order -->
+    <script src="js/storage.js"></script>
+    <script src="js/program-manager.js"></script>
+    <script src="js/ui-manager.js"></script>
+    <script src="js/drag-drop-handler.js"></script>
+    <script src="js/program-editor.js"></script>
+    <script src="js/touch-handler.js"></script>
+    <script src="js/workout-manager.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
