@@ -1,10 +1,10 @@
 
-const CACHE_NAME = "pwa-cache-v3";
+const CACHE_NAME = "pwa-cache-v4";
+const BUILD_TIME = "2025-07-11T12:00:00Z"; // Update this timestamp when deploying
 const urlsToCache = [
   "/", 
   "/index.html", 
   "/style.css", 
-  "/sw-update.js",
   "/js/storage.js",
   "/js/program-manager.js",
   "/js/ui-manager.js",
@@ -52,6 +52,12 @@ self.addEventListener("activate", (e) => {
 });
 
 self.addEventListener("fetch", (e) => {
+  // Never cache the update handler
+  if (e.request.url.includes('sw-update.js')) {
+    e.respondWith(fetch(e.request));
+    return;
+  }
+
   e.respondWith(
     caches.match(e.request).then((response) => {
       // Return cached version or fetch from network

@@ -22,8 +22,9 @@ class PWAUpdater {
             console.log('PWAUpdater: Service worker state changed to', newWorker.state);
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
               // New service worker installed and there's an existing one
-              console.log('PWAUpdater: Showing update prompt');
-              this.showUpdatePrompt();
+              console.log('PWAUpdater: Auto-applying update');
+              // Auto-apply updates immediately for seamless experience
+              this.applyUpdate();
             }
           });
         });
