@@ -1,6 +1,6 @@
 
 const CACHE_NAME = "pwa-cache-v4";
-const BUILD_TIME = "2025-07-11T12:00:00Z"; // Update this timestamp when deploying
+const BUILD_TIME = "2026-07-11T12:00:00Z"; // Update this timestamp when deploying
 const urlsToCache = [
   "/", 
   "/index.html", 
