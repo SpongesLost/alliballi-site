@@ -298,8 +298,8 @@ class WorkoutManager {
                                value="${currentSet.note || ''}" maxlength="100">
                     </div>
                     <div class="workout-buttons">
-                        <button class="btn btn-secondary" onclick="window.workoutManager.skipExercise()">Skip Exercise</button>
                         <button class="btn" onclick="window.workoutManager.completeSet()">Complete Set</button>
+                        <button class="btn btn-secondary" onclick="window.workoutManager.skipExercise()">Skip Exercise</button>
                     </div>
                 </div>
             </div>
