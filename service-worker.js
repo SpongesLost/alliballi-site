@@ -1,7 +1,7 @@
 // Last updated: 2025-07-12T11:18:44.210Z
 const CACHE_VERSION = 12;
 const CURRENT_CACHE = `main-${CACHE_VERSION}`;
-const urlsToCache = [
+const cacheFiles = [
   "/style.css",
   "/js/storage.js",
   "/js/program-manager.js", 
@@ -12,9 +12,6 @@ const urlsToCache = [
   "/js/workout-manager.js",
   "/js/app.js"
 ];
-
-// these are the routes we are going to cache for offline support
-const cacheFiles = ['/', '/about-me/', '/projects/', '/offline/'];
 
 // on activation we clean up the previously registered service workers
 self.addEventListener('activate', evt =>
