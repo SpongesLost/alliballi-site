@@ -1,77 +1,118 @@
-// Last updated: 2025-07-12T23:10:49.153Z
-// Last updated: 2025-07-12T11:18:44.210Z
-const CACHE_VERSION = 13;
-const CURRENT_CACHE = `main-${CACHE_VERSION}`;
-const cacheFiles = [
-  "/style.css",
-  "/js/storage.js",
-  "/js/program-manager.js", 
-  "/js/ui-manager.js",
-  "/js/drag-drop-handler.js",
-  "/js/program-editor.js",
-  "/js/touch-handler.js",
-  "/js/workout-manager.js",
-  "/js/app.js"
+const CACHE_VERSION = 1;
+const CACHE_NAME = `pwa-cache-v${CACHE_VERSION}`;
+const urlsToCache = [
+  '/',
+  '/index.html',
+  '/style.css',
+  '/js/storage.js',
+  '/js/program-manager.js',
+  '/js/ui-manager.js',
+  '/js/drag-drop-handler.js',
+  '/js/program-editor.js',
+  '/js/touch-handler.js',
+  '/js/workout-manager.js',
+  '/js/app.js'
 ];
 
-// on activation we clean up the previously registered service workers
-self.addEventListener('activate', evt =>
-  evt.waitUntil(
-    caches.keys().then(cacheNames => {
+self.addEventListener('install', (event) => {
+  console.log('Service Worker: Installing...');
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        console.log('Service Worker: Caching App Shell');
+        return cache.addAll(urlsToCache);
+      })
+      .then(() => {
+        console.log('Service Worker: Skip Waiting');
+        return self.skipWaiting();
+      })
+      .catch((error) => {
+        console.error('Service Worker: Cache failed', error);
+      })
+  );
+});
+
+self.addEventListener('activate', (event) => {
+  console.log('Service Worker: Activating...');
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
       return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CURRENT_CACHE) {
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            console.log('Service Worker: Deleting old cache', cacheName);
             return caches.delete(cacheName);
           }
         })
       );
+    }).then(() => {
+      console.log('Service Worker: Claiming clients');
+      return self.clients.claim();
     })
-  )
-);
-
-// on install we download the routes we want to cache for offline
-self.addEventListener('install', evt =>
-  evt.waitUntil(
-    caches.open(CURRENT_CACHE).then(cache => {
-      return cache.addAll(cacheFiles);
-    })
-  )
-);
-
-// fetch the resource from the network
-const fromNetwork = (request, timeout) =>
-  new Promise((fulfill, reject) => {
-    const timeoutId = setTimeout(reject, timeout);
-    fetch(request).then(response => {
-      clearTimeout(timeoutId);
-      fulfill(response);
-      update(request);
-    }, reject);
-  });
-
-// fetch the resource from the browser cache
-const fromCache = request =>
-  caches
-    .open(CURRENT_CACHE)
-    .then(cache =>
-      cache
-        .match(request)
-        .then(matching => matching || cache.match('/offline/'))
-    );
-
-// cache the current page to make it available for offline
-const update = request =>
-  caches
-    .open(CURRENT_CACHE)
-    .then(cache =>
-      fetch(request).then(response => cache.put(request, response))
-    );
-
-// general strategy when making a request (eg if online try to fetch it
-// from the network with a timeout, if something fails serve from cache)
-self.addEventListener('fetch', evt => {
-  evt.respondWith(
-    fromNetwork(evt.request, 10000).catch(() => fromCache(evt.request))
   );
-  evt.waitUntil(update(evt.request));
+});
+
+self.addEventListener('fetch', (event) => {
+  // Skip non-GET requests
+  if (event.request.method !== 'GET') return;
+  
+  // Skip chrome-extension and other non-http requests
+  if (!event.request.url.startsWith('http')) return;
+  
+  // Never cache sw-update.js to ensure it can always update
+  if (event.request.url.includes('sw-update.js')) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
+  // Network first for HTML to get fresh content
+  if (event.request.destination === 'document' || 
+      event.request.url.endsWith('/') || 
+      event.request.url.endsWith('.html')) {
+    
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseClone);
+            });
+          }
+          return response;
+        })
+        .catch(() => {
+          return caches.match(event.request);
+        })
+    );
+    return;
+  }
+
+  // Cache first for other assets
+  event.respondWith(
+    caches.match(event.request)
+      .then((response) => {
+        if (response) {
+          return response;
+        }
+        
+        return fetch(event.request).then((response) => {
+          if (!response || response.status !== 200 || response.type !== 'basic') {
+            return response;
+          }
+
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+
+          return response;
+        });
+      })
+  );
+});
+
+self.addEventListener('message', (event) => {
+    if (event.data === 'SKIP_WAITING') {
+        self.skipWaiting();
+    }
 });
