@@ -1,5 +1,5 @@
-// Last updated: 2025-07-12T23:48:18.450Z
-const CACHE_VERSION = 2;
+// Last updated: 2025-07-13T12:00:00.000Z
+const CACHE_VERSION = 3;
 const CACHE_NAME = `pwa-cache-v${CACHE_VERSION}`;
 const urlsToCache = [
   '/',
@@ -23,14 +23,11 @@ self.addEventListener('install', (event) => {
         console.log('Service Worker: Caching App Shell');
         return cache.addAll(urlsToCache);
       })
-      .then(() => {
-        console.log('Service Worker: Skip Waiting');
-        return self.skipWaiting();
-      })
       .catch((error) => {
         console.error('Service Worker: Cache failed', error);
       })
   );
+  // Don't call skipWaiting() automatically - wait for user action
 });
 
 self.addEventListener('activate', (event) => {
@@ -45,10 +42,8 @@ self.addEventListener('activate', (event) => {
           }
         })
       );
-    }).then(() => {
-      console.log('Service Worker: Claiming clients');
-      return self.clients.claim();
     })
+    // Don't call clients.claim() automatically - let the new SW wait for page reload
   );
 });
 
@@ -114,6 +109,7 @@ self.addEventListener('fetch', (event) => {
 
 self.addEventListener('message', (event) => {
     if (event.data === 'SKIP_WAITING') {
+        console.log('Service Worker: Received SKIP_WAITING message from client');
         self.skipWaiting();
     }
 });
