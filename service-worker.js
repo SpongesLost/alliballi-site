@@ -1,4 +1,5 @@
-const CACHE_VERSION = 10;
+// Last updated: 2025-07-12T11:18:44.210Z
+const CACHE_VERSION = 12;
 const CURRENT_CACHE = `main-${CACHE_VERSION}`;
 const urlsToCache = [
   "/style.css",
