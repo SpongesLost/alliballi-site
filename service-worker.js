@@ -1,4 +1,5 @@
-const CACHE_VERSION = 1;
+// Last updated: 2025-07-12T23:48:18.450Z
+const CACHE_VERSION = 2;
 const CACHE_NAME = `pwa-cache-v${CACHE_VERSION}`;
 const urlsToCache = [
   '/',
