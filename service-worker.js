@@ -1,5 +1,5 @@
-const CACHE_NAME = "pwa-cache-v7"; // Bump version to force update
-const BUILD_TIME = "2025-07-11T23:19:31.724Z"; // Update this timestamp when deploying
+const CACHE_VERSION = 10;
+const CURRENT_CACHE = `main-${CACHE_VERSION}`;
 const urlsToCache = [
   "/style.css",
   "/js/storage.js",
@@ -12,99 +12,67 @@ const urlsToCache = [
   "/js/app.js"
 ];
 
-self.addEventListener("install", (e) => {
-  console.log("Service Worker: Install");
-  e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log("Service Worker: Caching Files", urlsToCache);
-      return cache.addAll(urlsToCache);
-    }).then(() => {
-      console.log("Service Worker: All files cached successfully");
-      // Force the waiting service worker to become the active service worker
-      return self.skipWaiting();
-    }).catch((error) => {
-      console.error("Service Worker: Failed to cache files", error);
-      throw error;
-    })
-  );
-});
+// these are the routes we are going to cache for offline support
+const cacheFiles = ['/', '/about-me/', '/projects/', '/offline/'];
 
-self.addEventListener("activate", (e) => {
-  console.log("Service Worker: Activate");
-  e.waitUntil(
-    caches.keys().then((cacheNames) => {
+// on activation we clean up the previously registered service workers
+self.addEventListener('activate', evt =>
+  evt.waitUntil(
+    caches.keys().then(cacheNames => {
       return Promise.all(
-        cacheNames.map((cache) => {
-          if (cache !== CACHE_NAME) {
-            console.log("Service Worker: Clearing Old Cache");
-            return caches.delete(cache);
+        cacheNames.map(cacheName => {
+          if (cacheName !== CURRENT_CACHE) {
+            return caches.delete(cacheName);
           }
         })
       );
-    }).then(() => {
-      // Take control of all clients immediately
-      return self.clients.claim();
     })
-  );
-});
+  )
+);
 
-self.addEventListener("fetch", (e) => {
-  // Never cache the update handler
-  if (e.request.url.includes('sw-update.js')) {
-    e.respondWith(fetch(e.request));
-    return;
-  }
+// on install we download the routes we want to cache for offline
+self.addEventListener('install', evt =>
+  evt.waitUntil(
+    caches.open(CURRENT_CACHE).then(cache => {
+      return cache.addAll(cacheFiles);
+    })
+  )
+);
 
-  // Network-first strategy for HTML files (including index.html and root)
-  if (e.request.destination === 'document' || 
-      e.request.url.endsWith('/') || 
-      e.request.url.endsWith('.html')) {
-    
-    e.respondWith(
-      fetch(e.request).then((response) => {
-        // If network request succeeds, cache and return it
-        if (response && response.status === 200) {
-          const responseToCache = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(e.request, responseToCache);
-          });
-        }
-        return response;
-      }).catch(() => {
-        // If network fails, try to serve from cache
-        return caches.match(e.request);
-      })
+// fetch the resource from the network
+const fromNetwork = (request, timeout) =>
+  new Promise((fulfill, reject) => {
+    const timeoutId = setTimeout(reject, timeout);
+    fetch(request).then(response => {
+      clearTimeout(timeoutId);
+      fulfill(response);
+      update(request);
+    }, reject);
+  });
+
+// fetch the resource from the browser cache
+const fromCache = request =>
+  caches
+    .open(CURRENT_CACHE)
+    .then(cache =>
+      cache
+        .match(request)
+        .then(matching => matching || cache.match('/offline/'))
     );
-    return;
-  }
 
-  // Cache-first strategy for static assets (CSS, JS, etc.)
-  e.respondWith(
-    caches.match(e.request).then((response) => {
-      if (response) {
-        return response; // Serve from cache
-      }
-      
-      // If not in cache, fetch from network and cache
-      return fetch(e.request).then((fetchResponse) => {
-        if (!fetchResponse || fetchResponse.status !== 200 || fetchResponse.type !== 'basic') {
-          return fetchResponse;
-        }
+// cache the current page to make it available for offline
+const update = request =>
+  caches
+    .open(CURRENT_CACHE)
+    .then(cache =>
+      fetch(request).then(response => cache.put(request, response))
+    );
 
-        const responseToCache = fetchResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(e.request, responseToCache);
-        });
-
-        return fetchResponse;
-      });
-    })
+// general strategy when making a request (eg if online try to fetch it
+// from the network with a timeout, if something fails serve from cache)
+self.addEventListener('fetch', evt => {
+  evt.respondWith(
+    fromNetwork(evt.request, 10000).catch(() => fromCache(evt.request))
   );
-});
-
-// Listen for messages from the main thread
-self.addEventListener("message", (e) => {
-  if (e.data && e.data.type === "SKIP_WAITING") {
-    self.skipWaiting();
-  }
+  evt.waitUntil(update(evt.request));
 });
