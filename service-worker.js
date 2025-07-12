@@ -1,5 +1,6 @@
+// Last updated: 2025-07-12T23:10:49.153Z
 // Last updated: 2025-07-12T11:18:44.210Z
-const CACHE_VERSION = 12;
+const CACHE_VERSION = 13;
 const CURRENT_CACHE = `main-${CACHE_VERSION}`;
 const cacheFiles = [
   "/style.css",
