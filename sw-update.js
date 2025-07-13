@@ -189,8 +189,10 @@ function invokeServiceWorkerUpdateFlow(registration) {
 if ('serviceWorker' in navigator) {
     // wait for the page to load
     window.addEventListener('load', async () => {
+        console.log('Page loaded, registering service worker...');
         // register the service worker from the file specified
         const registration = await navigator.serviceWorker.register('/service-worker.js')
+        console.log('Service Worker registered with scope:', registration.scope);
 
         // ensure the case when the updatefound event was missed is also handled
         // by re-invoking the prompt when there's a waiting Service Worker
@@ -200,6 +202,7 @@ if ('serviceWorker' in navigator) {
 
         // detect Service Worker update available and wait for it to become installed
         registration.addEventListener('updatefound', () => {
+            console.log('Update found');
             if (registration.installing) {
                 console.log('New Service Worker found, waiting for installation...');
                 // wait until the new Service worker is actually installed (ready to take over)
