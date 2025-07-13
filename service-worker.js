@@ -1,8 +1,9 @@
+// Last updated: 2025-07-13T01:07:07.639Z
 // Last updated: 2025-07-13T01:01:49.773Z
 // Last updated: 2025-07-13T00:37:31.635Z
 // Last updated: 2025-07-13T00:24:50.599Z
 // Last updated: 2025-07-13T12:45:00.000Z
-const CACHE_VERSION = 11;
+const CACHE_VERSION = 12;
 const CACHE_NAME = `pwa-cache-v${CACHE_VERSION}`;
 const urlsToCache = [
   '/',
@@ -42,22 +43,24 @@ self.addEventListener('fetch', function (event) {
           return response; // Cache hit
         }
 
-        return fetch(event.request.clone())
+        return fetch(event.request)
           .then(function (response) {
             if (!isSuccessful(response)) {
               return response;
             }
 
+            // Clone the response BEFORE using it
+            const responseToCache = response.clone();
+
             caches.open(CACHE_NAME)
               .then(function (cache) {
-                cache.put(event.request, response.clone());
+                cache.put(event.request, responseToCache);
               });
 
             return response;
-          }
-        );
+          });
       })
-    );
+  );
 });
 
 self.addEventListener('message', (event) => {
