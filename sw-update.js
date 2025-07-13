@@ -201,7 +201,8 @@ if ('serviceWorker' in navigator) {
         }
 
         // detect Service Worker update available and wait for it to become installed
-        registration.addEventListener('updatefound', () => {
+        console.log('Listening for service worker updates...');
+        registration.addEventListener('updatefound', (event) => {
             console.log('Update found');
             if (registration.installing) {
                 console.log('New Service Worker found, waiting for installation...');
