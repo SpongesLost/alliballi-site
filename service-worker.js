@@ -1,9 +1,9 @@
-// Last updated: 2025-07-13T01:36:08.351Z
+// Last updated: 2025-07-13T01:50:40.161Z
 // Last updated: 2025-07-13T01:01:49.773Z
 // Last updated: 2025-07-13T00:37:31.635Z
 // Last updated: 2025-07-13T00:24:50.599Z
 // Last updated: 2025-07-13T12:45:00.000Z
-const CACHE_VERSION = 16;
+const CACHE_VERSION = 17;
 const CACHE_NAME = `pwa-cache-v${CACHE_VERSION}`;
 const urlsToCache = [
   '/',

@@ -197,9 +197,14 @@ if ('serviceWorker' in navigator) {
         // ensure the case when the updatefound event was missed is also handled
         // by re-invoking the prompt when there's a waiting Service Worker
         if (registration.waiting) {
-            invokeServiceWorkerUpdateFlow(registration)
+          invokeServiceWorkerUpdateFlow(registration)
         }
 
+        if (registration.installing) {
+            console.log('showing update prompt');
+            registration.installing.postMessage('SKIP_WAITING');
+        }
+        
         // detect Service Worker update available and wait for it to become installed
         console.log('Listening for service worker updates...');
         registration.addEventListener('updatefound', (event) => {
