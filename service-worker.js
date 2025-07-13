@@ -1,5 +1,5 @@
-// Last updated: 2025-07-13T12:30:00.000Z
-const CACHE_VERSION = 6;
+// Last updated: 2025-07-13T12:45:00.000Z
+const CACHE_VERSION = 7;
 const CACHE_NAME = `pwa-cache-v${CACHE_VERSION}`;
 const urlsToCache = [
   '/',
@@ -42,17 +42,8 @@ self.addEventListener('activate', (event) => {
           }
         })
       );
-    }).then(() => {
-      // When activating a new version, pre-cache all resources fresh
-      console.log('Service Worker: Pre-caching fresh resources');
-      return caches.open(CACHE_NAME).then((cache) => {
-        return cache.addAll(urlsToCache.map(url => {
-          // Add cache busting parameter to force fresh fetch
-          return url + '?sw-update=' + Date.now();
-        }));
-      });
     })
-    // Don't call clients.claim() automatically - let the new SW wait for page reload
+    // Don't pre-cache during activation - let resources update naturally on fetch
   );
 });
 
@@ -107,10 +98,7 @@ self.addEventListener('fetch', (event) => {
 
           const responseToCache = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
-            // Store without cache-busting parameter for future matches
-            const urlWithoutCacheBust = event.request.url.split('?sw-update=')[0];
-            const cleanRequest = new Request(urlWithoutCacheBust);
-            cache.put(cleanRequest, responseToCache);
+            cache.put(event.request, responseToCache);
           });
 
           return response;

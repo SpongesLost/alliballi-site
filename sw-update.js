@@ -225,7 +225,7 @@ if ('serviceWorker' in navigator) {
                 }
             });
 
-            // Check for updates periodically (every 20 seconds)
+            // Check for updates periodically (every 10 seconds for faster detection)
             setInterval(async () => {
                 try {
                     await registration.update();
@@ -233,7 +233,7 @@ if ('serviceWorker' in navigator) {
                 } catch (error) {
                     console.error('Failed to check for updates:', error);
                 }
-            }, 20000);
+            }, 10000);
 
             // Check for updates when page becomes visible
             document.addEventListener('visibilitychange', async () => {
