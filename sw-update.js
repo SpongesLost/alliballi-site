@@ -204,7 +204,7 @@ if ('serviceWorker' in navigator) {
                 console.log('New Service Worker found, waiting for installation...');
                 // wait until the new Service worker is actually installed (ready to take over)
                 registration.installing.addEventListener('statechange', () => {
-                    console.log('Service Worker state changed:', registration.installing.state);
+                    console.log('Service Worker state changed');
                     if (registration.waiting) {
                         console.log('New Service Worker installed and waiting to activate');
                         // if there's an existing controller (previous Service Worker), show the prompt
