@@ -1,4 +1,5 @@
-const CACHE_NAME = "pwa-cache-v1";
+const CACHE_VERSION = "1.0.0";
+const CACHE_NAME = `pwa-cache-v${CACHE_VERSION}`;
 const CACHE_URLS = [
   "/",
   "/index.html",
