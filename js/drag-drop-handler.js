@@ -52,7 +52,7 @@ class DragDropHandler {
             background: rgba(255, 59, 48, 0.1);
             backdrop-filter: blur(5px);
             display: none;
-            z-index: 999;
+            z-index: 500;
             pointer-events: none;
         `;
         
@@ -245,11 +245,11 @@ class DragDropHandler {
         if (isOutsideContainer && !this.isOverDeleteZone) {
             this.isOverDeleteZone = true;
             this.deleteZone.style.display = 'block';
-            this.draggedElement.style.background = 'rgba(255, 59, 48, 0.8)';
+            this.draggedElement.classList.add('over-delete');
         } else if (!isOutsideContainer && this.isOverDeleteZone) {
             this.isOverDeleteZone = false;
             this.deleteZone.style.display = 'none';
-            this.draggedElement.style.background = '';
+            this.draggedElement.classList.remove('over-delete');
         }
 
         // Handle reordering within container
@@ -297,11 +297,10 @@ class DragDropHandler {
             // Delete the exercise
             const exerciseName = this.draggedElement.dataset.exercise;
             this.draggedElement.remove();
-            
+            this.draggedElement.classList.remove('over-delete');
             // Hide delete zone
             this.deleteZone.style.display = 'none';
             this.isOverDeleteZone = false;
-            
             // Update the container
             const container = document.querySelector(this.containerSelector);
             if (container.children.length === 0) {
@@ -322,6 +321,7 @@ class DragDropHandler {
         
         // Remove dragging styles
         this.draggedElement.classList.remove('dragging');
+        this.draggedElement.classList.remove('over-delete');
         this.draggedElement.style.cssText = '';
 
         // Insert the dragged element at the new position

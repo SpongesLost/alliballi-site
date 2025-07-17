@@ -8,6 +8,7 @@ const CACHE_URLS = [
   // JavaScript files
   "/js/app.js",
   "/js/drag-drop-handler.js",
+  "/js/exercise-selector.js",
   "/js/exercise-swipe-handler.js",
   "/js/program-editor.js",
   "/js/program-manager.js",

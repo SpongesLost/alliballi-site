@@ -18,7 +18,7 @@ class FitnessApp {
         // Make instances available globally for onclick handlers
         window.programEditor = this.programEditor;
         window.workoutManager = this.workoutManager;
-        
+
         this.init();
     }
 
@@ -74,14 +74,30 @@ function startWorkout(programId) {
 }
 
 function deleteProgram(programId) {
-    if (confirm('Are you sure you want to delete this program?')) {
-        window.app.programManager.deleteProgram(programId);
-        UIManager.displayPrograms(window.app.programManager.getAllPrograms());
-    }
+    const program = window.app.programManager.getProgramById(programId);
+    if (!program) return;
+    
+    const programName = program.name || 'this program';
+    
+    CustomAlert.confirm(
+        `Are you sure you want to delete "${programName}"? This action cannot be undone.`,
+        'Delete Program',
+        () => {
+            // Confirmed - delete the program
+            window.app.programManager.deleteProgram(programId);
+            UIManager.displayPrograms(window.app.programManager.getAllPrograms());
+            CustomAlert.success('Program deleted successfully');
+        },
+        () => {
+            // Cancelled - do nothing
+        }
+    );
 }
 
 function exitWorkout() {
     window.workoutManager.exitWorkout();
 }
 // Initialize the application
-window.app = new FitnessApp();
+document.addEventListener('DOMContentLoaded', () => {
+    window.app = new FitnessApp();
+});

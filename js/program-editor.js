@@ -1,3 +1,149 @@
+// Custom alert utility
+class CustomAlert {
+    static show(message, title = '', icon = '⚠️', type = '') {
+        // Remove existing alert if any
+        const existingAlert = document.querySelector('.custom-alert');
+        if (existingAlert) {
+            existingAlert.remove();
+        }
+
+        // Create alert element
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `custom-alert ${type}`;
+        alertDiv.innerHTML = `
+            <div class="custom-alert-content">
+                <span class="custom-alert-icon">${icon}</span>
+                <div class="custom-alert-text">
+                    ${title ? `<div class="custom-alert-title">${title}</div>` : ''}
+                    <div class="custom-alert-message">${message}</div>
+                </div>
+                <button class="custom-alert-close" onclick="this.closest('.custom-alert').remove()">×</button>
+            </div>
+        `;
+
+        // Add to DOM
+        document.body.appendChild(alertDiv);
+
+        // Show with animation
+        setTimeout(() => {
+            alertDiv.classList.add('show');
+        }, 10);
+
+        // Auto-hide after 4 seconds
+        setTimeout(() => {
+            if (alertDiv.parentNode) {
+                alertDiv.classList.remove('show');
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.remove();
+                    }
+                }, 300);
+            }
+        }, 4000);
+
+        // Handle escape key
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                alertDiv.remove();
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
+
+        return alertDiv;
+    }
+
+    static success(message, title = 'Success') {
+        return this.show(message, title, '✅', 'success');
+    }
+
+    static error(message, title = 'Error') {
+        return this.show(message, title, '❌', 'error');
+    }
+
+    static warning(message, title = 'Warning') {
+        return this.show(message, title, '⚠️', 'warning');
+    }
+
+    static info(message, title = 'Info') {
+        return this.show(message, title, 'ℹ️', 'info');
+    }
+
+    static confirm(message, title = 'Confirm Action', onConfirm = null, onCancel = null) {
+        // Remove existing alert if any
+        const existingAlert = document.querySelector('.custom-alert');
+        if (existingAlert) {
+            existingAlert.remove();
+        }
+
+        // Create alert element
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'custom-alert confirm';
+        alertDiv.innerHTML = `
+            <div class="custom-alert-content">
+                <span class="custom-alert-icon">❓</span>
+                <div class="custom-alert-text">
+                    ${title ? `<div class="custom-alert-title">${title}</div>` : ''}
+                    <div class="custom-alert-message">${message}</div>
+                </div>
+                <div class="custom-alert-buttons">
+                    <button class="custom-alert-btn cancel-btn" title="Cancel">✕</button>
+                    <button class="custom-alert-btn confirm-btn" title="Confirm">✓</button>
+                </div>
+            </div>
+        `;
+
+        // Add to DOM
+        document.body.appendChild(alertDiv);
+
+        // Show with animation
+        setTimeout(() => {
+            alertDiv.classList.add('show');
+        }, 10);
+
+        // Handle button clicks
+        const cancelBtn = alertDiv.querySelector('.cancel-btn');
+        const confirmBtn = alertDiv.querySelector('.confirm-btn');
+
+        const closeAlert = () => {
+            alertDiv.classList.remove('show');
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 300);
+            document.removeEventListener('keydown', handleKeydown);
+        };
+
+        cancelBtn.onclick = () => {
+            closeAlert();
+            if (onCancel) onCancel();
+        };
+
+        confirmBtn.onclick = () => {
+            closeAlert();
+            if (onConfirm) onConfirm();
+        };
+
+        // Handle escape key
+        const handleKeydown = (e) => {
+            if (e.key === 'Escape') {
+                closeAlert();
+                if (onCancel) onCancel();
+            } else if (e.key === 'Enter') {
+                closeAlert();
+                if (onConfirm) onConfirm();
+            }
+        };
+        document.addEventListener('keydown', handleKeydown);
+
+        // Focus on cancel button by default
+        cancelBtn.focus();
+
+        return alertDiv;
+    }
+}
+
 // Program editor for creating and managing workout programs
 class ProgramEditor {
     constructor(programManager) {
@@ -66,17 +212,21 @@ class ProgramEditor {
     }
 
     addExercise() {
-        const select = document.getElementById('exercise-select');
-        const exercise = select.value;
+        const selectedExercise = window.getSelectedExercise();
+        
+        if (!selectedExercise) {
+            CustomAlert.warning('Please select an exercise first', 'No Exercise Selected');
+            return;
+        }
+
+        const exercise = selectedExercise.name;
         const sets = parseInt(document.getElementById('sets-input').value) || 3;
         const repMin = parseInt(document.getElementById('rep-min-input').value) || 8;
         const repMax = parseInt(document.getElementById('rep-max-input').value) || 12;
         
-        if (!exercise) return;
-        
         // Validate rep range
         if (repMin > repMax) {
-            alert('Minimum reps cannot be greater than maximum reps');
+            CustomAlert.error('Minimum reps cannot be greater than maximum reps', 'Invalid Rep Range');
             return;
         }
         
@@ -93,8 +243,9 @@ class ProgramEditor {
         container.appendChild(exerciseDiv);
         exerciseList.style.display = 'block';
         
-        // Reset form inputs
-        select.value = '';
+        // Clear the exercise selection after adding
+        window.clearExerciseSelection();
+        
         document.getElementById('sets-input').value = '3';
         document.getElementById('rep-min-input').value = '8';
         document.getElementById('rep-max-input').value = '12';
@@ -118,16 +269,25 @@ class ProgramEditor {
             text-align: center;
             font-size: 14px;
             color: #007aff;
-            animation: fadeIn 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
         `;
         
         const exerciseList = document.getElementById('exercise-list');
         exerciseList.appendChild(hint);
         
+        // Trigger fade-in animation
+        setTimeout(() => {
+            hint.style.opacity = '1';
+            hint.style.transform = 'translateY(0)';
+        }, 10);
+        
         // Auto-hide hint after 5 seconds
         setTimeout(() => {
             if (hint.parentNode) {
                 hint.style.opacity = '0';
+                hint.style.transform = 'translateY(-20px)';
                 setTimeout(() => {
                     if (hint.parentNode) {
                         hint.parentNode.removeChild(hint);
@@ -159,7 +319,7 @@ class ProgramEditor {
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Exercise Name</label>
-                        <input type="text" id="edit-exercise-name" value="${exerciseName}" readonly>
+                        <input type="text" id="edit-exercise-name" value="${exerciseName}">
                     </div>
                     <div class="form-group">
                         <label for="edit-sets">Sets</label>
@@ -174,33 +334,94 @@ class ProgramEditor {
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" onclick="this.closest('.edit-modal').remove()">Cancel</button>
-                    <button class="btn" onclick="window.programEditor.saveExerciseEdit(this)">Save</button>
+                <div class="modal-footer" style="display: flex; gap: 8px;">
+                    <button class="btn btn-primary" style="flex:2;" onclick="window.programEditor.saveExerciseEdit(this)">Save</button>
+                    <button class="btn btn-secondary" style="flex:1;" onclick="this.closest('.edit-modal').remove()">Cancel</button>
+                    <button class="btn btn-danger" style="flex:1;" onclick="window.programEditor.deleteExerciseFromEdit(this)">Delete</button>
                 </div>
             </div>
         `;
-        
         document.body.appendChild(modal);
-        
-        // Focus on sets input
-        document.getElementById('edit-sets').focus();
-        document.getElementById('edit-sets').select();
+        // Focus on exercise name input
+        document.getElementById('edit-exercise-name').focus();
+        document.getElementById('edit-exercise-name').select();
+    }
+
+    // Delete exercise from edit modal
+    deleteExerciseFromEdit(button) {
+        const modal = button.closest('.edit-modal');
+        const nameInput = modal.querySelector('#edit-exercise-name');
+        const exerciseName = nameInput ? nameInput.value.trim() : '';
+        if (!exerciseName) return;
+        CustomAlert.confirm(
+            `Are you sure you want to delete "${exerciseName}"? This action cannot be undone.`,
+            'Delete Exercise',
+            () => {
+                this._deleteExerciseByName(exerciseName);
+                if (modal && modal.parentNode) modal.remove();
+                CustomAlert.success('Exercise deleted successfully');
+            },
+            () => {
+                // Cancelled - do nothing
+            }
+        );
+    }
+
+    // Helper to remove the exact exercise instance from current program or DOM
+    _deleteExerciseByName(name) {
+        let deleted = false;
+        // Remove from currentProgram by DOM index if possible
+        if (this.currentEditingExercise && this.currentProgram && Array.isArray(this.currentProgram.exercises)) {
+            const container = document.getElementById('exercises-container');
+            if (container) {
+                const items = Array.from(container.querySelectorAll('.exercise-item'));
+                const domIndex = items.indexOf(this.currentEditingExercise);
+                if (domIndex !== -1 && domIndex < this.currentProgram.exercises.length) {
+                    this.currentProgram.exercises.splice(domIndex, 1);
+                    this.renderExercisesList();
+                    deleted = true;
+                }
+            }
+        }
+        // If not found in currentProgram, remove from DOM (unsaved exercise)
+        if (!deleted) {
+            if (this.currentEditingExercise) {
+                this.currentEditingExercise.remove();
+            } else {
+                // fallback: try to remove by name
+                const container = document.getElementById('exercises-container');
+                if (container) {
+                    const items = Array.from(container.querySelectorAll('.exercise-item'));
+                    const item = items.find(el => (el.dataset.exercise || '').trim() === name);
+                    if (item) {
+                        item.remove();
+                    }
+                }
+            }
+        }
     }
 
     saveExerciseEdit(button) {
+        const exerciseName = document.getElementById('edit-exercise-name').value.trim();
         const sets = parseInt(document.getElementById('edit-sets').value) || 3;
         const repMin = parseInt(document.getElementById('edit-rep-min').value) || 8;
         const repMax = parseInt(document.getElementById('edit-rep-max').value) || 12;
         
+        // Validate exercise name
+        if (!exerciseName) {
+            CustomAlert.error('Exercise name cannot be empty', 'Invalid Exercise Name');
+            return;
+        }
+        
         // Validate rep range
         if (repMin > repMax) {
-            alert('Minimum reps cannot be greater than maximum reps');
+            CustomAlert.error('Minimum reps cannot be greater than maximum reps', 'Invalid Rep Range');
             return;
         }
         
         // Update the specific exercise item being edited
         if (this.currentEditingExercise) {
+            this.currentEditingExercise.dataset.exercise = exerciseName;
             this.currentEditingExercise.dataset.sets = sets;
             this.currentEditingExercise.dataset.repMin = repMin;
             this.currentEditingExercise.dataset.repMax = repMax;
@@ -208,6 +429,7 @@ class ProgramEditor {
             // Update the display
             const repRangeText = `${repMin}-${repMax} reps`;
             const exerciseInfo = `${sets} sets • ${repRangeText}`;
+            this.currentEditingExercise.querySelector('.exercise-name').textContent = exerciseName;
             this.currentEditingExercise.querySelector('.exercise-sets').textContent = exerciseInfo;
             
             // Clear the reference
@@ -223,12 +445,12 @@ class ProgramEditor {
         const exerciseElements = document.querySelectorAll('#exercises-container .exercise-item');
         
         if (!name) {
-            alert('Please enter a program name');
+            CustomAlert.warning('Please enter a program name', 'Program Name Required');
             return;
         }
         
         if (exerciseElements.length === 0) {
-            alert('Please add at least one exercise');
+            CustomAlert.warning('Please add at least one exercise', 'No Exercises Added');
             return;
         }
         
@@ -257,7 +479,7 @@ class ProgramEditor {
         // Switch to programs tab
         UIManager.showProgramsTab();
         
-        alert(editingId ? 'Program updated successfully!' : 'Program saved successfully!');
+        CustomAlert.success(editingId ? 'Program updated successfully!' : 'Program saved successfully!');
     }
 
     resetCreateForm() {

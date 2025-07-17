@@ -1,5 +1,19 @@
 // Workout manager for handling workout sessions
 class WorkoutManager {
+    goToPreviousSet() {
+        if (this.isAnimating) return;
+        // If not at the first set, go back one set
+        if (this.currentSetIndex > 0) {
+            this.currentSetIndex--;
+            this.displayCurrentExercise();
+        } else if (this.currentExerciseIndex > 0) {
+            // If at first set but not first exercise, go to last set of previous exercise
+            this.currentExerciseIndex--;
+            const prevExercise = this.currentExercises[this.currentExerciseIndex];
+            this.currentSetIndex = prevExercise.sets - 1;
+            this.displayCurrentExercise();
+        }
+    }
     constructor(programManager) {
         this.programManager = programManager;
         this.currentProgram = null;
@@ -10,6 +24,7 @@ class WorkoutManager {
         this.touchHandler = null;
         this.wakeLock = null;
         this.wakeLockActive = false;
+        this.isAnimating = false; // Prevent double actions during animations
     }
 
     startWorkout(programId) {
@@ -18,6 +33,7 @@ class WorkoutManager {
         this.currentExerciseIndex = 0;
         this.currentSetIndex = 0;
         this.workoutData = {};
+        this.isAnimating = false; // Ensure animation flag is reset at start
         const card = document.getElementById('exercise-card');
         card.style.touchAction = 'auto';
         card.style.pointerEvents = 'auto';
@@ -35,7 +51,7 @@ class WorkoutManager {
         
         UIManager.showWorkoutMode();
         this.displayCurrentExercise();
-        this.setupSwipeHandlers();
+        // Don't call setupSwipeHandlers here since displayCurrentExercise already does it
         this.createWakeLockToggle();
     }
 
@@ -49,10 +65,17 @@ class WorkoutManager {
     }
 
     handleSwipe(direction) {
+        // Prevent handling swipes during animations
+        if (this.isAnimating) {
+            return;
+        }
         this.animateCardSwipe(direction);
     }
 
     animateCardSwipe(direction) {
+        // Set animation flag to prevent double actions
+        this.isAnimating = true;
+        
         // Prevent swiping right when at the very beginning (first exercise, first set)
         if (
             direction === 'right' &&
@@ -64,6 +87,11 @@ class WorkoutManager {
             cardElement.style.transition = 'transform 0.3s cubic-bezier(.4,1.3,.6,1), opacity 0.3s';
             cardElement.style.transform = 'translateX(0)';
             cardElement.style.opacity = '1';
+            
+            // Clear animation flag after snap back
+            setTimeout(() => {
+                this.isAnimating = false;
+            }, 200);
             return;
         }
 
@@ -108,7 +136,8 @@ class WorkoutManager {
             // Position new card on the opposite side from swipe direction
             cardElement.style.transition = 'none';
             cardElement.style.transform = direction === 'left' ? 'translateX(110vw)' : 'translateX(-110vw)';
-            
+            // Force reflow to ensure the browser applies the transform before animating
+            void cardElement.offsetWidth;
             // Animate new card in
             requestAnimationFrame(() => {
                 cardElement.style.transition = 'transform 0.3s cubic-bezier(.4,1.3,.6,1), opacity 0.3s';
@@ -118,9 +147,10 @@ class WorkoutManager {
                 // Re-setup swipe handlers after animation completes
                 setTimeout(() => {
                     this.setupSwipeHandlers();
-                    const repsInput = document.getElementById(`reps-${this.currentSetIndex}`);
-                    if (repsInput) repsInput.focus();
-                }, 300);
+                    // Clear animation flag
+                    this.isAnimating = false;
+                    // Removed auto-focus to prevent keyboard popup on mobile
+                }, 100);
             });
         }, 300);
     }
@@ -136,9 +166,13 @@ class WorkoutManager {
         
         // Focus on reps input and setup swipe handlers after DOM update
         setTimeout(() => {
+            // Prevent swiping immediately after card is shown
+            this.isAnimating = true;
             this.setupSwipeHandlers();
-            const repsInput = document.getElementById(`reps-${this.currentSetIndex}`);
-            if (repsInput) repsInput.focus();
+            setTimeout(() => {
+                this.isAnimating = false;
+            }, 200); // 500ms delay before next swipe is allowed
+            // Removed auto-focus to prevent keyboard popup on mobile
         }, 50);
     }
 
@@ -183,11 +217,32 @@ class WorkoutManager {
     }
 
     completeSet() {
-        const reps = parseInt(document.getElementById(`reps-${this.currentSetIndex}`).value) || 0;
-        const weight = parseFloat(document.getElementById(`weight-${this.currentSetIndex}`).value) || 0;
+        // Prevent completing sets during animations
+        if (this.isAnimating) {
+            return;
+        }
+        let repsInput = document.getElementById(`reps-${this.currentSetIndex}`).value;
+        let weightInput = document.getElementById(`weight-${this.currentSetIndex}`).value;
         const note = document.getElementById(`note-${this.currentSetIndex}`).value.trim() || '';
-        
+
+        let reps = repsInput !== '' ? parseInt(repsInput) : null;
+        let weight = weightInput !== '' ? parseFloat(weightInput) : null;
+
         const exercise = this.currentExercises[this.currentExerciseIndex];
+        // If reps or weight are blank or 0 and note is present, use previous session's value if available
+        if (note && (reps === null || reps === 0) && (weight === null || weight === 0)) {
+            // Try to get previous set data from previous session
+            const previousData = this.getPreviousSessionData(exercise.name);
+            const prevSet = previousData ? this.getPreviousSetData(exercise.name, this.currentSetIndex) : null;
+            if (prevSet) {
+                if ((reps === null || reps === 0) && prevSet.reps > 0) reps = prevSet.reps;
+                if ((weight === null || weight === 0) && prevSet.weight > 0) weight = prevSet.weight;
+            }
+        }
+        // Default to 0 if still null
+        reps = reps !== null ? reps : 0;
+        weight = weight !== null ? weight : 0;
+
         this.workoutData[exercise.name].sets[this.currentSetIndex] = { reps, weight, note };
         
         this.currentSetIndex++;
@@ -212,6 +267,10 @@ class WorkoutManager {
     }
 
     skipExercise() {
+        // Prevent skipping exercises during animations
+        if (this.isAnimating) {
+            return;
+        }
         // Move to next exercise
         this.currentExerciseIndex++;
         this.currentSetIndex = 0;
@@ -226,6 +285,8 @@ class WorkoutManager {
     }
 
     animateToNextExercise() {
+        // Set animation flag
+        this.isAnimating = true;
         const card = document.getElementById('exercise-card');
         
         // Animate current card offscreen
@@ -254,11 +315,12 @@ class WorkoutManager {
                 card.style.transform = 'translateX(0)';
                 card.style.opacity = '1';
                 
-                // Setup swipe handlers and focus after animation completes
+                // Setup swipe handlers after animation completes, but delay enabling swipe
                 setTimeout(() => {
                     this.setupSwipeHandlers();
-                    const repsInput = document.getElementById(`reps-${this.currentSetIndex}`);
-                    if (repsInput) repsInput.focus();
+                    setTimeout(() => {
+                        this.isAnimating = false;
+                    }, 200); // 200ms delay before next swipe is allowed
                 }, 300);
             });
         }, 300);
@@ -266,8 +328,22 @@ class WorkoutManager {
 
     generateExerciseCardHTML(exercise, setIndex, previousData) {
         const currentSet = this.workoutData[exercise.name].sets[setIndex];
+        const prevSet = previousData ? this.getPreviousSetData(exercise.name, setIndex) : null;
         const isCompleted = currentSet.reps > 0 || currentSet.weight > 0;
-        const prevSet = this.getPreviousSetData(exercise.name, setIndex);
+
+        // Use the full rep range as the placeholder if available, otherwise fallback to min or 0
+        let repPlaceholder = '0';
+        if (exercise.repRange && typeof exercise.repRange.min === 'number' && typeof exercise.repRange.max === 'number') {
+            repPlaceholder = `${exercise.repRange.min}-${exercise.repRange.max}`;
+        } else if (exercise.repRange && typeof exercise.repRange.min === 'number') {
+            repPlaceholder = exercise.repRange.min.toString();
+        }
+
+        // For weight, show previous set's weight if available, otherwise 0
+        let weightPlaceholder = '0';
+        if (prevSet && typeof prevSet.weight === 'number' && prevSet.weight > 0) {
+            weightPlaceholder = prevSet.weight.toString();
+        }
 
         return `
             <div class="exercise-title">${exercise.name}</div>
@@ -276,17 +352,17 @@ class WorkoutManager {
                 <div class="set-item active ${isCompleted ? 'completed' : ''}">
                     <div class="set-header">
                         ${prevSet ? `<span class="set-previous">Last: ${prevSet.reps} reps × ${prevSet.weight} kg</span>` : ''}
-                        ${prevSet && prevSet.note ? `<div class="set-previous-note">Note: "${prevSet.note}"</div>` : ''}
+                        ${prevSet && prevSet.note ? `<div class="set-previous-note">\"${prevSet.note}\"</div>` : ''}
                     </div>
                     <div class="set-inputs">
                         <div class="set-input">
                             <label>Reps</label>
-                            <input type="number" id="reps-${setIndex}" placeholder="0" min="0" 
+                            <input type="number" id="reps-${setIndex}" placeholder="${repPlaceholder}" min="0" 
                                    value="${currentSet.reps || ''}">
                         </div>
                         <div class="set-input">
                             <label>Weight</label>
-                            <input type="number" id="weight-${setIndex}" placeholder="0" min="0" step="0.5"
+                            <input type="number" id="weight-${setIndex}" placeholder="${weightPlaceholder}" min="0" step="0.5"
                                    value="${currentSet.weight || ''}">
                         </div>
                     </div>
@@ -297,9 +373,12 @@ class WorkoutManager {
                         <input type="text" id="note-${setIndex}" placeholder="e.g., felt easy, good form"
                                value="${currentSet.note || ''}" maxlength="100">
                     </div>
-                    <div class="workout-buttons">
-                        <button class="btn" onclick="window.workoutManager.completeSet()">Complete Set</button>
-                        <button class="btn btn-secondary" onclick="window.workoutManager.skipExercise()">Skip Exercise</button>
+                    <div class="workout-buttons" style="display: flex; flex-direction: column; gap: 8px; align-items: stretch; margin-bottom: 8px;">
+                        <button class="btn" style="width: 100%;" onclick="window.workoutManager.completeSet()">Complete Set</button>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-secondary" style="flex: 1 1 20%; max-width: 20%; min-width: 0; display: flex; align-items: center; justify-content: center; font-size: 22px; line-height: 1; padding-top: 2px; padding-bottom: 4px;" onclick="window.workoutManager.goToPreviousSet()"><span style="display:inline-block; vertical-align:middle; font-size:22px; line-height:1;">&#8592;</span></button>
+                            <button class="btn btn-secondary" style="flex: 1 1 80%; max-width: 80%; min-width: 0;" onclick="window.workoutManager.skipExercise()">Skip Exercise</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -365,6 +444,7 @@ class WorkoutManager {
                     ${session.exercises.length} exercises completed
                 </div>
             `;
+            window.fireBottomConfetti();
             
             // Disable touch and pointer events on completion card
             card.style.touchAction = 'none';
@@ -376,7 +456,12 @@ class WorkoutManager {
             
             // Wait for the user to see the completion message before exiting
             setTimeout(() => {
-                alert('Workout completed! Great job!');
+                // Remove wake lock toggle button
+                const wakeLockToggle = document.querySelector('.wake-lock-toggle');
+                if (wakeLockToggle) {
+                    wakeLockToggle.remove();
+                }
+                CustomAlert.success('Workout completed! 🎉', 'Congratulations!');
                 this.exitWorkout();
             }, 1500);
         }, 300);
@@ -388,16 +473,16 @@ class WorkoutManager {
             this.touchHandler.cleanup();
             this.touchHandler = null;
         }
-        
+
         // Remove wake lock toggle button
         const wakeLockToggle = document.querySelector('.wake-lock-toggle');
         if (wakeLockToggle) {
             wakeLockToggle.remove();
         }
-        
+
         // Release wake lock
         await this.releaseWakeLock();
-        
+
         UIManager.showProgramsTab();
         UIManager.displayPrograms(this.programManager.getAllPrograms());
     }
@@ -428,11 +513,11 @@ class WorkoutManager {
                 this.updateWakeLockIcon();
             } else {
                 console.warn('Wake Lock API not supported');
-                alert('Wake Lock is not supported in this browser');
+                CustomAlert.warning('Wake Lock is not supported in this browser', 'Feature Unavailable');
             }
         } catch (err) {
             console.error('Failed to toggle wake lock:', err);
-            alert('Failed to toggle wake lock');
+            CustomAlert.error('Failed to toggle wake lock', 'Error');
         }
     }
 

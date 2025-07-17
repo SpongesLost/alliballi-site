@@ -46,21 +46,51 @@
                     
                     <div class="form-group">
                         <label for="exercise-select">Add Exercise</label>
-                        <select id="exercise-select" required>
-                            <option value="" disabled selected hidden>Select exercise</option>
-                            <option value="Push-ups">Push-ups</option>
-                            <option value="Squats">Squats</option>
-                            <option value="Bench Press">Bench Press</option>
-                            <option value="Deadlift">Deadlift</option>
-                            <option value="Pull-ups">Pull-ups</option>
-                            <option value="Overhead Press">Overhead Press</option>
-                            <option value="Barbell Rows">Barbell Rows</option>
-                            <option value="Lunges">Lunges</option>
-                            <option value="Bicep Curls">Bicep Curls</option>
-                            <option value="Tricep Dips">Tricep Dips</option>
-                            <option value="Plank">Plank</option>
-                            <option value="Mountain Climbers">Mountain Climbers</option>
-                        </select>
+                        <div class="exercise-selector">
+                            <div class="exercise-search-container">
+                                <input type="text" id="exercise-search" placeholder="Search exercises..." autocomplete="off">
+                            </div>
+                            <div class="exercise-dropdown" id="exercise-dropdown">
+                                <div class="exercise-dropdown-content">
+                                    <div class="exercise-dropdown-header">
+                                        <h3 class="exercise-dropdown-title">Select Exercise</h3>
+                                        <button class="exercise-dropdown-close" id="exercise-dropdown-close" type="button">&times;</button>
+                                    </div>
+                                    <div class="exercise-dropdown-filters">
+                                        <div class="exercise-search-container" style="margin-bottom: 12px;">
+                                            <input type="text" id="exercise-search-modal" placeholder="Search exercises..." style="width: 100%; padding: 12px 16px; background: #1c1c1e; border: 1px solid #48484a; border-radius: 8px; color: #f2f2f7; font-size: 16px;">
+                                        </div>
+                                        <div class="exercise-filters">
+                                            <select id="muscle-filter-modal">
+                                                <option value="">All Muscles</option>
+                                                <option value="chest">Chest</option>
+                                                <option value="back">Back</option>
+                                                <option value="legs">Legs</option>
+                                                <option value="shoulders">Shoulders</option>
+                                                <option value="arms">Arms</option>
+                                                <option value="core">Core</option>
+                                            </select>
+                                            <select id="equipment-filter-modal">
+                                                <option value="">All Equipment</option>
+                                                <option value="bodyweight">Bodyweight</option>
+                                                <option value="dumbbells">Dumbbells</option>
+                                                <option value="barbell">Barbell</option>
+                                                <option value="cable">Cable</option>
+                                                <option value="machine">Machine</option>
+                                                <option value="resistance-band">Resistance Band</option>
+                                                <option value="kettlebell">Kettlebell</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="exercise-dropdown-body">
+                                        <div class="exercise-categories" id="exercise-categories">
+                                            <!-- Exercise categories will be populated here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="selected-exercise" value="">
+                        </div>
                     </div>
                     
                     <div style="display: flex; justify-content: center;">
@@ -110,9 +140,11 @@
     <script src="js/storage.js"></script>
     <script src="js/program-manager.js"></script>
     <script src="js/ui-manager.js"></script>
+    <script src="js/exercise-selector.js"></script>
     <script src="js/drag-drop-handler.js"></script>
     <script src="js/program-editor.js"></script>
     <script src="js/touch-handler.js"></script>
+    <script type="module" src="js/confetti.js"></script>
     <script src="js/workout-manager.js"></script>
     <script src="js/app.js"></script>
 </body>
