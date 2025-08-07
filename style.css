@@ -1344,7 +1344,6 @@ input[type=number] {
     .exercise-item {
         flex-direction: row;
         align-items: center;
-        padding: 12px 12px;
         gap: 16px;
     }
     
@@ -1361,7 +1360,6 @@ input[type=number] {
     .exercise-list .exercise-name,
     .exercise-item .exercise-name {
         flex: 1;
-        min-width: 200px;
         font-size: 16px;
         font-weight: 700;
         color: #f2f2f7;
@@ -1688,7 +1686,8 @@ input[type=number] {
     position: relative;
     top: 0;
     left: auto;
-    right: 5px;
+    right: 0;
+    max-width: 95vw;
     gap: 8px;
     margin-top: 1px;
 }
