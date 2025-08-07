@@ -9,6 +9,7 @@ class TouchHandler {
         this.cardElement = null;
         this.swipeDirection = null;
         this.onSwipeCallback = null;
+        this.didSwipe = false; // Track if a swipe occurred
     }
 
     setupSwipeHandlers(cardElement, onSwipeCallback) {
@@ -22,6 +23,7 @@ class TouchHandler {
         this.boundHandleMouseStart = this.handleMouseStart.bind(this);
         this.boundHandleMouseMove = this.handleMouseMove.bind(this);
         this.boundHandleMouseEnd = this.handleMouseEnd.bind(this);
+        this.boundHandleClick = this.handleClick.bind(this);
 
         // Touch events
         this.cardElement.addEventListener('touchstart', this.boundHandleTouchStart, { passive: false });
@@ -33,37 +35,46 @@ class TouchHandler {
         this.cardElement.addEventListener('mousemove', this.boundHandleMouseMove);
         this.cardElement.addEventListener('mouseup', this.boundHandleMouseEnd);
         this.cardElement.addEventListener('mouseleave', this.boundHandleMouseEnd);
+        
+        // Click event to prevent clicks after swipes
+        this.cardElement.addEventListener('click', this.boundHandleClick, { capture: true });
+    }
+
+    handleClick(e) {
+        // Prevent click if we just performed a swipe
+        if (this.didSwipe) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.didSwipe = false;
+        }
     }
 
     handleTouchStart(e) {
         if (!this.cardElement) return;
-        // Prevent swipe if starting on input or button
-        const target = e.target;
-        if (target.tagName === 'INPUT' || target.tagName === 'BUTTON') {
-            this.isDragging = false;
-            return;
-        }
         this.startX = e.touches[0].clientX;
         this.startY = e.touches[0].clientY;
         this.currentX = this.startX;
         this.currentY = this.startY;
         this.isDragging = true;
         this.swipeDirection = null;
+        this.didSwipe = false;
         this.cardElement.style.transition = 'none';
     }
 
     handleTouchMove(e) {
         if (!this.isDragging || !this.cardElement) return;
-        e.preventDefault();
         this.currentX = e.touches[0].clientX;
         this.currentY = e.touches[0].clientY;
         const deltaX = this.currentX - this.startX;
         const deltaY = this.currentY - this.startY;
-        // Only handle horizontal swipes
+        
+        // Only handle horizontal swipes and prevent default only when actually swiping
         if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+            e.preventDefault();
             this.cardElement.style.transform = `translateX(${deltaX}px)`;
             this.cardElement.style.opacity = 1 - Math.min(Math.abs(deltaX) / 300, 0.7);
             this.swipeDirection = deltaX > 0 ? 'right' : 'left';
+            this.didSwipe = true; // Mark that we performed a swipe
         }
     }
 
@@ -73,9 +84,9 @@ class TouchHandler {
         this.cardElement.style.transition = '';
         const deltaX = this.currentX - this.startX;
         if (Math.abs(deltaX) > 100 && this.swipeDirection) {
+            this.didSwipe = true;
             this.onSwipeCallback(this.swipeDirection);
         } else {
-            // Snap back
             this.cardElement.style.transform = 'translateX(0)';
             this.cardElement.style.opacity = '1';
         }
@@ -83,20 +94,14 @@ class TouchHandler {
 
     handleMouseStart(e) {
         if (!this.cardElement) return;
-        // Prevent swipe if starting on input or button
-        const target = e.target;
-        if (target.tagName === 'INPUT' || target.tagName === 'BUTTON') {
-            this.isDragging = false;
-            return;
-        }
         this.startX = e.clientX;
         this.startY = e.clientY;
         this.currentX = this.startX;
         this.currentY = this.startY;
         this.isDragging = true;
         this.swipeDirection = null;
+        this.didSwipe = false;
         this.cardElement.style.transition = 'none';
-        e.preventDefault();
     }
 
     handleMouseMove(e) {
@@ -105,10 +110,13 @@ class TouchHandler {
         this.currentY = e.clientY;
         const deltaX = this.currentX - this.startX;
         const deltaY = this.currentY - this.startY;
+        
         if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+            e.preventDefault();
             this.cardElement.style.transform = `translateX(${deltaX}px)`;
             this.cardElement.style.opacity = 1 - Math.min(Math.abs(deltaX) / 300, 0.7);
             this.swipeDirection = deltaX > 0 ? 'right' : 'left';
+            this.didSwipe = true;
         }
     }
 
@@ -118,6 +126,7 @@ class TouchHandler {
         this.cardElement.style.transition = '';
         const deltaX = this.currentX - this.startX;
         if (Math.abs(deltaX) > 100 && this.swipeDirection) {
+            this.didSwipe = true;
             this.onSwipeCallback(this.swipeDirection);
         } else {
             this.cardElement.style.transform = 'translateX(0)';
@@ -134,11 +143,12 @@ class TouchHandler {
             this.cardElement.removeEventListener('mousemove', this.boundHandleMouseMove);
             this.cardElement.removeEventListener('mouseup', this.boundHandleMouseEnd);
             this.cardElement.removeEventListener('mouseleave', this.boundHandleMouseEnd);
+            this.cardElement.removeEventListener('click', this.boundHandleClick);
             
-            // Reset properties
             this.cardElement = null;
             this.onSwipeCallback = null;
             this.isDragging = false;
+            this.didSwipe = false;
         }
     }
 }

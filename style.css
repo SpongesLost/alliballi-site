@@ -1,3 +1,22 @@
+/* Cool effect for set completion in exercise card */
+
+
+.set-complete-effect {
+    animation: setCompleteBurst 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 0 8px #34c75955, 0 0 32px #34c75988;
+    will-change: transform, box-shadow, opacity;
+}
+
+@keyframes setCompleteBurst {
+    0% {
+        box-shadow: 0 0 0 8px #34c75955, 0 0 24px #34c75988;
+        transform: scale(1.04);
+    }
+    100% {
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+        transform: scale(1);
+    }
+}
 /* Highlight exercise item and edit button red when dragged over delete area */
 .exercise-item.dragging.over-delete,
 .exercise-item.over-delete {
@@ -445,7 +464,6 @@ body {
     background: none;
     border: none;
     color: #8e8e93;
-    font-size: 24px;
     cursor: pointer;
     padding: 0;
     width: 30px;
@@ -640,7 +658,6 @@ body {
     font-style: italic;
     margin-top: 2px;
     padding: 2px 0;
-    border-top: 1px solid #38383a;
     max-width: 145px;
 }
 
@@ -844,16 +861,17 @@ input[type=number] {
     background: none;
     border: none;
     color: #8e8e93;
-    font-size: 28px;
     cursor: pointer;
-    padding: 0;
-    width: 40px;
-    height: 40px;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    font-size: 28px;      /* Make icon larger */
+    width: 44px;          /* Increase clickable area */
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    transition: all 0.2s ease;
 }
 
 .exercise-dropdown-close:hover {
@@ -1057,7 +1075,7 @@ input[type=number] {
     border: 1px solid #48484a;
     border-radius: 8px;
     padding: 8px 12px;
-    max-width: 280px;
+    max-width: 400px;
     width: 90%;
     z-index: 15000;
     opacity: 0;
@@ -1110,10 +1128,16 @@ input[type=number] {
     border: none;
     color: #8e8e93;
     cursor: pointer;
-    padding: 4px;
-    border-radius: 4px;
+    padding: 8px;
+    border-radius: 6px;
     transition: all 0.2s ease;
     flex-shrink: 0;
+    font-size: 28px;      /* Make icon larger */
+    width: 44px;          /* Increase clickable area */
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .custom-alert-close:hover {
@@ -1662,10 +1686,11 @@ input[type=number] {
 
 .modifiers-selection {
     position: relative;
+    top: 0;
+    left: auto;
+    right: 5px;
     gap: 8px;
     margin-top: 1px;
-    right: 63px;
-    top: 0;
 }
 
 .modifier-group {
@@ -1734,4 +1759,9 @@ input[type=number] {
 /* Prevent active state propagation when modifier is being interacted with */
 .exercise-item.modifier-active {
     transform: none !important;
+}
+
+/* Add margin to the right for modifier dropdowns inside subexercises/variants */
+.variant-item .modifiers-selection {
+    margin-right: 8px;
 }

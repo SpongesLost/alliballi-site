@@ -52,9 +52,45 @@ class ExerciseSelector {
         // Filter dropdowns - modal versions only
         this.modalMuscleFilter.addEventListener('change', () => this.handleModalFilter());
         this.modalEquipmentFilter.addEventListener('change', () => this.handleModalFilter());
+        // If muscle filter dropdown exists, update its options to reflect new categories
+        this.updateMuscleFilterOptions();
         
         // Close button - only way to close the modal
         this.dropdownClose.addEventListener('click', () => this.hideDropdown());
+    }
+
+    updateMuscleFilterOptions() {
+        // Only update if filter exists and is a select element
+        if (!this.modalMuscleFilter || this.modalMuscleFilter.tagName !== 'SELECT') return;
+        // Save current value
+        const currentValue = this.modalMuscleFilter.value;
+        // New muscle categories
+        const muscleOptions = [
+            { value: '', label: 'All Muscles' },
+            { value: 'chest', label: 'Chest' },
+            { value: 'back', label: 'Back' },
+            { value: 'legs', label: 'Legs' },
+            { value: 'shoulders', label: 'Shoulders' },
+            { value: 'biceps', label: 'Biceps' },
+            { value: 'triceps', label: 'Triceps' },
+            { value: 'forearms', label: 'Forearms' },
+            { value: 'core', label: 'Core' },
+            { value: 'cardio', label: 'Cardio' },
+            { value: 'full-body', label: 'Full Body' }
+        ];
+        // Remove all options
+        while (this.modalMuscleFilter.options.length > 0) {
+            this.modalMuscleFilter.remove(0);
+        }
+        // Add new options
+        muscleOptions.forEach(opt => {
+            const option = document.createElement('option');
+            option.value = opt.value;
+            option.textContent = opt.label;
+            this.modalMuscleFilter.appendChild(option);
+        });
+        // Restore previous value if possible
+        this.modalMuscleFilter.value = currentValue;
     }
 
     showDropdown() {
@@ -106,39 +142,39 @@ class ExerciseSelector {
         // Normalize search term for better matching
         const normalizedSearchTerm = this.normalizeSearchTerm(searchTerm);
 
-        const results = this.exercises.filter(exercise => {
-            // Normalize exercise data for better matching
+        const results = [];
+        this.exercises.forEach(exercise => {
+            // Main exercise search
             const normalizedExerciseName = this.normalizeSearchTerm(exercise.name.toLowerCase());
             const normalizedMuscle = this.normalizeSearchTerm(exercise.muscle.toLowerCase());
             const normalizedEquipment = this.normalizeSearchTerm(exercise.equipment.toLowerCase());
+            let allExerciseWords = [normalizedExerciseName, normalizedMuscle, normalizedEquipment];
+            if (exercise.aliases) {
+                exercise.aliases.forEach(alias => {
+                    allExerciseWords.push(this.normalizeSearchTerm(alias.toLowerCase()));
+                });
+            }
+            if (exercise.modifiers) {
+                Object.values(exercise.modifiers).forEach(modifierArray => {
+                    modifierArray.forEach(modifier => {
+                        allExerciseWords.push(this.normalizeSearchTerm(modifier.toLowerCase()));
+                    });
+                });
+            }
+
+            // Search for main exercise
             let matchesSearch = !searchTerm;
             let searchScore = 0;
             if (searchTerm) {
-                // Stricter AND logic: all search words must match somewhere
                 let searchWords = searchTerm.split(/\s+/);
                 if (searchWords.length > 1) {
                     searchWords = searchWords.filter(word => word.length > 1);
                 }
-                let allExerciseWords = [normalizedExerciseName, normalizedMuscle, normalizedEquipment];
-                if (exercise.aliases) {
-                    exercise.aliases.forEach(alias => {
-                        allExerciseWords.push(this.normalizeSearchTerm(alias.toLowerCase()));
-                    });
-                }
-                if (exercise.modifiers) {
-                    Object.values(exercise.modifiers).forEach(modifierArray => {
-                        modifierArray.forEach(modifier => {
-                            allExerciseWords.push(this.normalizeSearchTerm(modifier.toLowerCase()));
-                        });
-                    });
-                }
                 matchesSearch = searchWords.length > 0 && searchWords.every(word =>
                     allExerciseWords.some(exWord => exWord.includes(this.normalizeSearchTerm(word)))
                 );
-                // Boost for exact and prefix matches
                 if (matchesSearch) {
                     searchScore = 100 + searchWords.length * 5;
-                    // Highest boost for exact match
                     if (normalizedExerciseName === normalizedSearchTerm) {
                         searchScore += 1000;
                     } else if (normalizedExerciseName.startsWith(normalizedSearchTerm)) {
@@ -148,12 +184,79 @@ class ExerciseSelector {
             }
             const matchesMuscle = !muscleFilter || exercise.muscle === muscleFilter;
             const matchesEquipment = !equipmentFilter || exercise.equipment === equipmentFilter;
-            if (matchesSearch && matchesMuscle && matchesEquipment) {
-                exercise._searchScore = searchScore;
-                return true;
+            let variantMatched = false;
+            if (exercise.variants && Array.isArray(exercise.variants)) {
+                exercise.variants.forEach(variant => {
+                    const normalizedVariantName = this.normalizeSearchTerm(variant.name.toLowerCase());
+                    let variantWords = [normalizedVariantName];
+                    // Add variant aliases to search words
+                    if (variant.aliases) {
+                        variant.aliases.forEach(alias => {
+                            variantWords.push(this.normalizeSearchTerm(alias.toLowerCase()));
+                        });
+                    }
+                    if (variant.modifiers) {
+                        Object.values(variant.modifiers).forEach(modifierArray => {
+                            modifierArray.forEach(modifier => {
+                                variantWords.push(this.normalizeSearchTerm(modifier.toLowerCase()));
+                            });
+                        });
+                    }
+                    let matchesVariantSearch = !searchTerm;
+                    let variantSearchScore = 0;
+                    if (searchTerm) {
+                        let searchWords = searchTerm.split(/\s+/);
+                        if (searchWords.length > 1) {
+                            searchWords = searchWords.filter(word => word.length > 1);
+                        }
+                        matchesVariantSearch = searchWords.length > 0 && searchWords.every(word =>
+                            variantWords.some(exWord => exWord.includes(this.normalizeSearchTerm(word)))
+                        );
+                        if (matchesVariantSearch) {
+                            variantSearchScore = 100 + searchWords.length * 5;
+                            if (normalizedVariantName === normalizedSearchTerm) {
+                                variantSearchScore += 1000;
+                            } else if (normalizedVariantName.startsWith(normalizedSearchTerm)) {
+                                variantSearchScore += 500;
+                            }
+                        }
+                    }
+                    const matchesVariantMuscle = !muscleFilter || exercise.muscle === muscleFilter;
+                    const matchesVariantEquipment = !equipmentFilter || variant.equipment === equipmentFilter;
+                    if (matchesVariantSearch && matchesVariantMuscle && matchesVariantEquipment) {
+                        variantMatched = true;
+                        // Attach parent muscle for grouping
+                        const variantResult = {
+                            ...variant,
+                            muscle: exercise.muscle,
+                            parentName: exercise.name,
+                            _searchScore: variantSearchScore
+                        };
+                        results.push(variantResult);
+                    }
+                });
             }
-            return false;
+
+            // Only add main exercise if no variant matched, but only hide it if searchTerm is not empty
+            if ((!variantMatched || !searchTerm) && matchesSearch && matchesMuscle && matchesEquipment) {
+                exercise._searchScore = searchScore;
+                results.push(exercise);
+            }
         });
+
+        // Sort by search score (highest first) and then by name
+        if (searchTerm) {
+            results.sort((a, b) => {
+                const scoreDiff = (b._searchScore || 0) - (a._searchScore || 0);
+                if (scoreDiff !== 0) return scoreDiff;
+                return a.name.localeCompare(b.name);
+            });
+        }
+
+        // Clean up temporary search scores
+        results.forEach(exercise => delete exercise._searchScore);
+
+        return results;
 
         // Sort by search score (highest first) and then by name
         if (searchTerm) {
@@ -174,39 +277,58 @@ class ExerciseSelector {
         const filteredExercises = this.getFilteredExercises();
         const searchTerm = (this.searchInput && this.searchInput.value) ? this.searchInput.value.trim() : '';
 
-        // Add custom add button if no results and search term is not empty
-        if (filteredExercises.length === 0) {
-            this.categoriesContainer.innerHTML = `
-                <div class="no-exercises" style="margin-bottom: 8px;">No exercises found</div>
-                ${searchTerm ? `<button id="add-custom-exercise-btn" class="btn btn-small" style="margin: 0 auto; display:block;padding:7px 14px;font-size:13px;max-width:250px;align">Add "${searchTerm}" as new exercise</button>` : ''}
-            `;
-            // Attach handler for add button
-            if (searchTerm) {
-                setTimeout(() => {
-                    const btn = document.getElementById('add-custom-exercise-btn');
-                    if (btn) {
-                        btn.addEventListener('click', () => {
-                            this.addCustomExerciseFromSearch(searchTerm);
-                        });
-                    }
-                }, 0);
+        // If searching, show results strictly by score order, not grouped
+        if (searchTerm) {
+            let html = '';
+            if (filteredExercises.length === 0) {
+                this.categoriesContainer.innerHTML = `
+                    <div class="no-exercises" style="margin-bottom: 8px;">No exercises found</div>
+                    ${searchTerm ? `<button id="add-custom-exercise-btn" class="btn btn-small" style="margin: 0 auto; display:block;padding:7px 14px;font-size:13px;max-width:250px;align">Add "${searchTerm}" as new exercise</button>` : ''}
+                `;
+                if (searchTerm) {
+                    setTimeout(() => {
+                        const btn = document.getElementById('add-custom-exercise-btn');
+                        if (btn) {
+                            btn.addEventListener('click', () => {
+                                this.addCustomExerciseFromSearch(searchTerm);
+                            });
+                        }
+                    }, 0);
+                }
+                return;
             }
+            html += `<div class="exercise-category">
+                <div class="category-header">Results</div>
+                ${filteredExercises.map(exercise => this.renderExerciseItem(exercise)).join('')}
+            </div>`;
+            this.categoriesContainer.innerHTML = html;
+            this.attachExerciseClickListeners();
             return;
         }
 
-        // Group by muscle group
-        const groupedExercises = this.groupExercisesByMuscle(filteredExercises);
-        
+        // Not searching: group by muscle and show subexercises section if any
+        const mainExercises = filteredExercises.filter(ex => !ex.parentName);
+        const variantResults = filteredExercises.filter(ex => ex.parentName);
         let html = '';
-        Object.entries(groupedExercises).forEach(([muscle, exercises]) => {
+        if (mainExercises.length > 0) {
+            const groupedExercises = this.groupExercisesByMuscle(mainExercises);
+            Object.entries(groupedExercises).forEach(([muscle, exercises]) => {
+                html += `
+                    <div class="exercise-category">
+                        <div class="category-header">${this.capitalizeFirst(muscle)}</div>
+                        ${exercises.map(exercise => this.renderExerciseItem(exercise)).join('')}
+                    </div>
+                `;
+            });
+        }
+        if (variantResults.length > 0) {
             html += `
                 <div class="exercise-category">
-                    <div class="category-header">${this.capitalizeFirst(muscle)}</div>
-                    ${exercises.map(exercise => this.renderExerciseItem(exercise)).join('')}
+                    <div class="category-header">Subexercises</div>
+                    ${variantResults.map(exercise => this.renderExerciseItem(exercise)).join('')}
                 </div>
             `;
-        });
-
+        }
         this.categoriesContainer.innerHTML = html;
         this.attachExerciseClickListeners();
     }
@@ -289,12 +411,15 @@ class ExerciseSelector {
         return `
             <div class="variants-dropdown">
                 ${variants.map(variant => {
-                    // Properly escape the JSON for HTML attribute
                     const variantDataJson = JSON.stringify(variant).replace(/'/g, '&apos;');
+                    let modifiersHtml = '';
+                    if (variant.modifiers && Object.keys(variant.modifiers).length > 0) {
+                        modifiersHtml = this.renderModifiersSelection(variant.modifiers);
+                    }
                     return `
                         <div class="variant-item" data-variant='${variantDataJson}'>
                             ${variant.name}
-                            <span class="equipment-tag">${variant.equipment}</span>
+                            ${modifiersHtml}
                         </div>
                     `;
                 }).join('')}
@@ -313,7 +438,6 @@ class ExerciseSelector {
             if (hasVariants) {
                 // Handle main exercise click to toggle variants (anywhere on the item)
                 item.addEventListener('click', (e) => {
-                    // Don't toggle if clicking on a variant item or modifier dropdown
                     if (!e.target.closest('.variant-item') && !e.target.closest('.modifier-select')) {
                         e.preventDefault();
                         e.stopPropagation();
@@ -321,7 +445,7 @@ class ExerciseSelector {
                         this.toggleVariants(item);
                     }
                 });
-                
+
                 // Handle variant clicks
                 const variantItems = item.querySelectorAll('.variant-item');
                 variantItems.forEach(variantItem => {
@@ -332,17 +456,49 @@ class ExerciseSelector {
                         // Decode the escaped JSON from HTML attribute
                         const variantDataJson = variantItem.dataset.variant.replace(/&apos;/g, "'");
                         const variantData = JSON.parse(variantDataJson);
-                        this.selectExercise({
-                            name: variantData.name,
+
+                        // If variant has its own modifiers, collect those, else use parent exercise modifiers
+                        let finalExerciseName = variantData.name;
+                        let selectedModifiers = {};
+                        let modifierSelects;
+                        if (variantData.modifiers) {
+                            modifierSelects = variantItem.querySelectorAll('.modifier-select');
+                        } else if (exerciseData.modifiers) {
+                            modifierSelects = item.querySelectorAll('.modifier-select');
+                        }
+                        const modifierParts = [];
+                        if (modifierSelects) {
+                            modifierSelects.forEach(select => {
+                                const modifierType = select.dataset.modifierType;
+                                const selectedValue = select.value;
+                                if (selectedValue) {
+                                    selectedModifiers[modifierType] = selectedValue;
+                                    modifierParts.push(selectedValue);
+                                }
+                            });
+                            if (modifierParts.length > 0) {
+                                finalExerciseName = `${modifierParts.join(' ')} ${variantData.name}`;
+                            }
+                        }
+
+                        this.selectedExercise = {
+                            ...variantData,
                             muscle: exerciseData.muscle,
-                            equipment: variantData.equipment
-                        });
+                            equipment: variantData.equipment,
+                            name: finalExerciseName,
+                            baseName: variantData.name,
+                            selectedModifiers: selectedModifiers
+                        };
+                        this.selectedExerciseInput.value = finalExerciseName;
+                        this.searchInput.value = finalExerciseName;
+                        this.hideDropdown();
+                        this.modalMuscleFilter.value = '';
+                        this.modalEquipmentFilter.value = '';
                     });
                 });
             } else {
                 // Handle single exercise click
                 item.addEventListener('click', (e) => {
-                    // Don't select if clicking on a modifier dropdown
                     if (!e.target.closest('.modifier-select')) {
                         e.preventDefault();
                         e.stopPropagation();
@@ -576,6 +732,14 @@ if (!document.getElementById('modifier-reset-style')) {
             transition: opacity 0.2s;
         }
         .modifier-group .modifier-select { width: 110px; max-width: 100%; flex-shrink:0; }
+        .variants-dropdown {
+            background: #222 !important;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+        }
+        .variant-item {
+            background: transparent;
+            color: #f5f5f5;
+        }
         @media (max-width: 600px) {
             .modifier-group { max-width: 100vw; overflow: visible !important; flex-wrap: nowrap !important; }
             .modifier-reset-btn { right: -10px; left: auto; }

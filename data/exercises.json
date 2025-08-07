@@ -14,10 +14,18 @@
         "name": "Bench Press",
         "muscle": "chest",
         "equipment": "barbell",
-        "modifiers": {
-            "angle": ["Flat", "Incline", "Decline"],
-            "grip": ["Close-Grip", "Wide-Grip", "Standard"]
-        }
+        "variants": [
+            { "name": "Bench Press", "equipment": "barbell" },
+            {
+                "name": "Smith Machine Bench Press",
+                "equipment": "machine",
+                "modifiers": {
+                    "angle": ["Flat", "Incline", "Decline"],
+                    "grip": ["Close-Grip", "Wide-Grip", "Standard"],
+                    "machineType": ["Standard", "Counterbalanced"]
+                }
+            }
+        ]
     },
     {
         "name": "Dumbbell Press",
@@ -197,7 +205,7 @@
     { "name": "Band Pull-Aparts", "muscle": "shoulders", "equipment": "resistance-band" },
     {
         "name": "Bicep Curls",
-        "muscle": "arms",
+        "muscle": "biceps",
         "equipment": "dumbbells",
         "variants": [
             { "name": "Bicep Curls", "equipment": "dumbbells" },
@@ -216,7 +224,7 @@
     },
     {
         "name": "Tricep Exercises",
-        "muscle": "arms",
+        "muscle": "triceps",
         "equipment": "bodyweight",
         "variants": [
             { "name": "Tricep Dips", "equipment": "bodyweight" },
@@ -234,7 +242,7 @@
     },
     {
         "name": "Wrist Exercises",
-        "muscle": "arms",
+        "muscle": "forearms",
         "equipment": "dumbbells",
         "variants": [
             { "name": "Wrist Curls", "equipment": "dumbbells" },

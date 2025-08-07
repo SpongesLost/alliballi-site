@@ -343,14 +343,33 @@ class DragDropHandler {
 
         // Calculate the new order
         const items = Array.from(container.querySelectorAll(this.itemSelector));
-        const newOrder = items.map(item => ({
-            exercise: item.dataset.exercise,
-            sets: parseInt(item.dataset.sets),
-            repRange: {
-                min: parseInt(item.dataset.repMin) || 8,
-                max: parseInt(item.dataset.repMax) || 12
+        const newOrder = items.map(item => {
+            // Build repRange if possible
+            let repRange = undefined;
+            if (item.dataset.rangeType === 'seconds') {
+                repRange = {
+                    min: parseInt(item.dataset.secMin) || 30,
+                    max: parseInt(item.dataset.secMax) || 60,
+                    type: 'seconds'
+                };
+            } else if (item.dataset.rangeType === 'reps') {
+                repRange = {
+                    min: parseInt(item.dataset.repMin) || 8,
+                    max: parseInt(item.dataset.repMax) || 12,
+                    type: 'reps'
+                };
             }
-        }));
+            return {
+                exercise: item.dataset.exercise,
+                sets: parseInt(item.dataset.sets),
+                repRange,
+                rangeType: item.dataset.rangeType,
+                repMin: item.dataset.repMin ? parseInt(item.dataset.repMin) : undefined,
+                repMax: item.dataset.repMax ? parseInt(item.dataset.repMax) : undefined,
+                secMin: item.dataset.secMin ? parseInt(item.dataset.secMin) : undefined,
+                secMax: item.dataset.secMax ? parseInt(item.dataset.secMax) : undefined
+            };
+        });
 
         // Notify about the reorder
         if (this.onReorderCallback) {

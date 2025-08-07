@@ -151,6 +151,23 @@ class ProgramEditor {
         this.dragDropHandler = null;
         this.currentEditingExercise = null;
         this.initializeDragDrop();
+        this.setupRangeTypeCheckbox();
+    }
+
+    setupRangeTypeCheckbox() {
+        const checkbox = document.getElementById('range-type-checkbox');
+        const repFields = document.getElementById('rep-range-fields');
+        const secFields = document.getElementById('second-range-fields');
+        if (!checkbox || !repFields || !secFields) return;
+        checkbox.addEventListener('change', function() {
+            if (checkbox.checked) {
+                repFields.style.display = 'none';
+                secFields.style.display = '';
+            } else {
+                repFields.style.display = '';
+                secFields.style.display = 'none';
+            }
+        });
     }
 
     initializeDragDrop() {
@@ -164,9 +181,16 @@ class ProgramEditor {
     }
 
     // Helper method to create exercise HTML - eliminates duplication
-    createExerciseHTML(exerciseName, sets, repRange) {
-        const repRangeText = repRange ? `${repRange.min}-${repRange.max} reps` : '';
-        const exerciseInfo = repRangeText ? `${sets} sets • ${repRangeText}` : `${sets} sets`;
+    createExerciseHTML(exerciseName, sets, rangeObj) {
+        let rangeText = '';
+        if (rangeObj) {
+            if (rangeObj.type === 'seconds') {
+                rangeText = `${rangeObj.min}-${rangeObj.max} sec`;
+            } else {
+                rangeText = `${rangeObj.min}-${rangeObj.max} reps`;
+            }
+        }
+        const exerciseInfo = rangeText ? `${sets} sets • ${rangeText}` : `${sets} sets`;
         
         return `
             <div class="exercise-details">
@@ -182,12 +206,18 @@ class ProgramEditor {
     }
 
     // Helper method to setup exercise div with common properties
-    setupExerciseDiv(exerciseDiv, exerciseName, sets, repRange) {
+    setupExerciseDiv(exerciseDiv, exerciseName, sets, rangeObj) {
         exerciseDiv.dataset.exercise = exerciseName;
         exerciseDiv.dataset.sets = sets;
-        if (repRange) {
-            exerciseDiv.dataset.repMin = repRange.min;
-            exerciseDiv.dataset.repMax = repRange.max;
+        if (rangeObj) {
+            exerciseDiv.dataset.rangeType = rangeObj.type;
+            if (rangeObj.type === 'seconds') {
+                exerciseDiv.dataset.secMin = rangeObj.min;
+                exerciseDiv.dataset.secMax = rangeObj.max;
+            } else {
+                exerciseDiv.dataset.repMin = rangeObj.min;
+                exerciseDiv.dataset.repMax = rangeObj.max;
+            }
         }
         
         // Add drag handle indicator
@@ -196,60 +226,77 @@ class ProgramEditor {
     }
 
     onExerciseReorder(newOrder) {
-        // Update the DOM to reflect the new order
+        // Update the DOM to reflect the new order, preserving repRange/rangeType
         const container = document.getElementById('exercises-container');
         container.innerHTML = '';
-        
         newOrder.forEach(exercise => {
             const exerciseDiv = document.createElement('div');
             exerciseDiv.className = 'exercise-item';
-            
-            exerciseDiv.innerHTML = this.createExerciseHTML(exercise.exercise, exercise.sets, exercise.repRange);
-            this.setupExerciseDiv(exerciseDiv, exercise.exercise, exercise.sets, exercise.repRange);
-            
+            // Try to get repRange from exercise object, fallback to dataset if needed
+            let repRange = exercise.repRange;
+            if (!repRange && exercise.rangeType) {
+                if (exercise.rangeType === 'seconds') {
+                    repRange = { min: exercise.secMin, max: exercise.secMax, type: 'seconds' };
+                } else {
+                    repRange = { min: exercise.repMin, max: exercise.repMax, type: 'reps' };
+                }
+            }
+            exerciseDiv.innerHTML = this.createExerciseHTML(exercise.exercise, exercise.sets, repRange);
+            this.setupExerciseDiv(exerciseDiv, exercise.exercise, exercise.sets, repRange);
             container.appendChild(exerciseDiv);
         });
     }
 
     addExercise() {
         const selectedExercise = window.getSelectedExercise();
-        
         if (!selectedExercise) {
             CustomAlert.warning('Please select an exercise first', 'No Exercise Selected');
             return;
         }
-
         const exercise = selectedExercise.name;
         const sets = parseInt(document.getElementById('sets-input').value) || 3;
-        const repMin = parseInt(document.getElementById('rep-min-input').value) || 8;
-        const repMax = parseInt(document.getElementById('rep-max-input').value) || 12;
-        
-        // Validate rep range
-        if (repMin > repMax) {
-            CustomAlert.error('Minimum reps cannot be greater than maximum reps', 'Invalid Rep Range');
-            return;
+        const rangeType = document.getElementById('range-type-checkbox').checked ? 'seconds' : 'reps';
+        let rangeMin, rangeMax;
+        let repRange;
+        if (rangeType === 'reps') {
+            rangeMin = parseInt(document.getElementById('rep-min-input').value) || 8;
+            rangeMax = parseInt(document.getElementById('rep-max-input').value) || 12;
+            if (rangeMin > rangeMax) {
+                CustomAlert.error('Minimum reps cannot be greater than maximum reps', 'Invalid Rep Range');
+                return;
+            }
+            repRange = { min: rangeMin, max: rangeMax, type: 'reps' };
+        } else {
+            rangeMin = parseInt(document.getElementById('sec-min-input').value) || 30;
+            rangeMax = parseInt(document.getElementById('sec-max-input').value) || 60;
+            if (rangeMin > rangeMax) {
+                CustomAlert.error('Minimum seconds cannot be greater than maximum seconds', 'Invalid Second Range');
+                return;
+            }
+            repRange = { min: rangeMin, max: rangeMax, type: 'seconds' };
         }
-        
         const container = document.getElementById('exercises-container');
         const exerciseList = document.getElementById('exercise-list');
-        
         const exerciseDiv = document.createElement('div');
         exerciseDiv.className = 'exercise-item';
-        
-        const repRange = { min: repMin, max: repMax };
         exerciseDiv.innerHTML = this.createExerciseHTML(exercise, sets, repRange);
         this.setupExerciseDiv(exerciseDiv, exercise, sets, repRange);
-        
+        // Save repRange and rangeType to dataset for later editing
+        exerciseDiv.dataset.rangeType = repRange.type;
+        exerciseDiv.dataset.repRange = JSON.stringify(repRange);
         container.appendChild(exerciseDiv);
         exerciseList.style.display = 'block';
-        
-        // Clear the exercise selection after adding
         window.clearExerciseSelection();
-        
         document.getElementById('sets-input').value = '3';
         document.getElementById('rep-min-input').value = '8';
         document.getElementById('rep-max-input').value = '12';
-        
+        document.getElementById('sec-min-input').value = '30';
+        document.getElementById('sec-max-input').value = '60';
+        document.getElementById('range-type-checkbox').checked = false;
+        document.getElementById('rep-range-fields').style.display = '';
+        document.getElementById('second-range-fields').style.display = 'none';
+        const rangeLabel = document.getElementById('range-type-label');
+        if (rangeLabel) rangeLabel.textContent = 'Rep Range';
         // Show drag hint if this is the first exercise being added
         if (container.children.length === 1) {
             this.showDragHint();
@@ -301,13 +348,14 @@ class ProgramEditor {
         const exerciseItem = button.closest('.exercise-item');
         const exerciseName = exerciseItem.dataset.exercise;
         const sets = parseInt(exerciseItem.dataset.sets);
+        const rangeType = exerciseItem.dataset.rangeType || 'reps';
         const repMin = parseInt(exerciseItem.dataset.repMin) || 8;
         const repMax = parseInt(exerciseItem.dataset.repMax) || 12;
-        
-        // Store reference to the exercise item being edited
+        const secMin = parseInt(exerciseItem.dataset.secMin) || 30;
+        const secMax = parseInt(exerciseItem.dataset.secMax) || 60;
+
         this.currentEditingExercise = exerciseItem;
-        
-        // Create edit modal
+
         const modal = document.createElement('div');
         modal.className = 'edit-modal';
         modal.innerHTML = `
@@ -326,11 +374,22 @@ class ProgramEditor {
                         <input type="number" id="edit-sets" value="${sets}" min="1" max="10">
                     </div>
                     <div class="form-group">
-                        <label>Rep Range</label>
-                        <div class="rep-range-container">
-                            <input type="number" id="edit-rep-min" value="${repMin}" min="1" max="100">
-                            <span class="rep-range-separator">-</span>
-                            <input type="number" id="edit-rep-max" value="${repMax}" min="1" max="100">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                            <input type="checkbox" id="edit-range-type-checkbox" ${rangeType === 'seconds' ? 'checked' : ''} style="width: 14px; height: 14px; border-radius: 4px; box-shadow: none; outline: none; margin: 0; opacity: ${rangeType === 'seconds' ? '1' : '0.2'}; transition: opacity 0.2s;">
+                            <span style="font-size: 14px; color: #f2f2f7;">Seconds</span>
+                        </div>
+                        <label id="edit-range-type-label" for="edit-range-type-checkbox" style="font-size: 16px; font-weight: 500; color: #f2f2f7; margin-bottom: 0;">${rangeType === 'seconds' ? 'Second Range' : 'Rep Range'}</label>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+                            <div id="edit-rep-range-fields" class="rep-range-container" style="${rangeType === 'seconds' ? 'display:none;' : ''}">
+                                <input type="number" id="edit-rep-min" value="${repMin}" min="1" max="100">
+                                <span class="rep-range-separator">-</span>
+                                <input type="number" id="edit-rep-max" value="${repMax}" min="1" max="100">
+                            </div>
+                            <div id="edit-second-range-fields" class="rep-range-container" style="${rangeType === 'seconds' ? '' : 'display:none;'}">
+                                <input type="number" id="edit-sec-min" value="${secMin}" min="1" max="600">
+                                <span class="rep-range-separator">-</span>
+                                <input type="number" id="edit-sec-max" value="${secMax}" min="1" max="600">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -342,9 +401,25 @@ class ProgramEditor {
             </div>
         `;
         document.body.appendChild(modal);
-        // Focus on exercise name input
-        document.getElementById('edit-exercise-name').focus();
-        document.getElementById('edit-exercise-name').select();
+        // Setup checkbox and fields logic
+        const checkbox = modal.querySelector('#edit-range-type-checkbox');
+        const repFields = modal.querySelector('#edit-rep-range-fields');
+        const secFields = modal.querySelector('#edit-second-range-fields');
+        const rangeLabel = modal.querySelector('#edit-range-type-label');
+        if (checkbox && repFields && secFields && rangeLabel) {
+            checkbox.addEventListener('change', function() {
+                checkbox.style.opacity = checkbox.checked ? '1' : '0.2';
+                if (checkbox.checked) {
+                    repFields.style.display = 'none';
+                    secFields.style.display = '';
+                    rangeLabel.textContent = 'Second Range';
+                } else {
+                    repFields.style.display = '';
+                    secFields.style.display = 'none';
+                    rangeLabel.textContent = 'Rep Range';
+                }
+            });
+        }
     }
 
     // Delete exercise from edit modal
@@ -402,84 +477,113 @@ class ProgramEditor {
     }
 
     saveExerciseEdit(button) {
-        const exerciseName = document.getElementById('edit-exercise-name').value.trim();
-        const sets = parseInt(document.getElementById('edit-sets').value) || 3;
-        const repMin = parseInt(document.getElementById('edit-rep-min').value) || 8;
-        const repMax = parseInt(document.getElementById('edit-rep-max').value) || 12;
-        
+        const modal = button.closest('.edit-modal');
+        const exerciseName = modal.querySelector('#edit-exercise-name').value.trim();
+        const sets = parseInt(modal.querySelector('#edit-sets').value) || 3;
+        const isSeconds = modal.querySelector('#edit-range-type-checkbox').checked;
+        const repMin = parseInt(modal.querySelector('#edit-rep-min').value) || 8;
+        const repMax = parseInt(modal.querySelector('#edit-rep-max').value) || 12;
+        const secMin = parseInt(modal.querySelector('#edit-sec-min').value) || 30;
+        const secMax = parseInt(modal.querySelector('#edit-sec-max').value) || 60;
+
         // Validate exercise name
         if (!exerciseName) {
             CustomAlert.error('Exercise name cannot be empty', 'Invalid Exercise Name');
             return;
         }
-        
-        // Validate rep range
-        if (repMin > repMax) {
-            CustomAlert.error('Minimum reps cannot be greater than maximum reps', 'Invalid Rep Range');
-            return;
+
+        // Validate range
+        if (isSeconds) {
+            if (secMin > secMax) {
+                CustomAlert.error('Minimum seconds cannot be greater than maximum seconds', 'Invalid Second Range');
+                return;
+            }
+        } else {
+            if (repMin > repMax) {
+                CustomAlert.error('Minimum reps cannot be greater than maximum reps', 'Invalid Rep Range');
+                return;
+            }
         }
-        
+
         // Update the specific exercise item being edited
         if (this.currentEditingExercise) {
             this.currentEditingExercise.dataset.exercise = exerciseName;
             this.currentEditingExercise.dataset.sets = sets;
-            this.currentEditingExercise.dataset.repMin = repMin;
-            this.currentEditingExercise.dataset.repMax = repMax;
-            
+            if (isSeconds) {
+                this.currentEditingExercise.dataset.rangeType = 'seconds';
+                this.currentEditingExercise.dataset.secMin = secMin;
+                this.currentEditingExercise.dataset.secMax = secMax;
+                // Remove rep fields
+                delete this.currentEditingExercise.dataset.repMin;
+                delete this.currentEditingExercise.dataset.repMax;
+            } else {
+                this.currentEditingExercise.dataset.rangeType = 'reps';
+                this.currentEditingExercise.dataset.repMin = repMin;
+                this.currentEditingExercise.dataset.repMax = repMax;
+                // Remove seconds fields
+                delete this.currentEditingExercise.dataset.secMin;
+                delete this.currentEditingExercise.dataset.secMax;
+            }
             // Update the display
-            const repRangeText = `${repMin}-${repMax} reps`;
-            const exerciseInfo = `${sets} sets • ${repRangeText}`;
+            let rangeText = '';
+            if (isSeconds) {
+                rangeText = `${secMin}-${secMax} sec`;
+            } else {
+                rangeText = `${repMin}-${repMax} reps`;
+            }
+            const exerciseInfo = `${sets} sets • ${rangeText}`;
             this.currentEditingExercise.querySelector('.exercise-name').textContent = exerciseName;
             this.currentEditingExercise.querySelector('.exercise-sets').textContent = exerciseInfo;
-            
-            // Clear the reference
             this.currentEditingExercise = null;
         }
-        
         // Close modal
-        button.closest('.edit-modal').remove();
+        modal.remove();
     }
 
     saveProgram() {
         const name = document.getElementById('program-name').value.trim();
-        const exerciseElements = document.querySelectorAll('#exercises-container .exercise-item');
-        
         if (!name) {
-            CustomAlert.warning('Please enter a program name', 'Program Name Required');
+            CustomAlert.error('Program name cannot be empty', 'Invalid Program Name');
             return;
         }
-        
-        if (exerciseElements.length === 0) {
-            CustomAlert.warning('Please add at least one exercise', 'No Exercises Added');
+        const container = document.getElementById('exercises-container');
+        const exerciseDivs = Array.from(container.querySelectorAll('.exercise-item'));
+        if (exerciseDivs.length === 0) {
+            CustomAlert.error('Add at least one exercise to save the program', 'No Exercises');
             return;
         }
-        
-        const exercises = Array.from(exerciseElements).map(el => ({
-            name: el.dataset.exercise,
-            sets: parseInt(el.dataset.sets),
-            repRange: {
-                min: parseInt(el.dataset.repMin) || 8,
-                max: parseInt(el.dataset.repMax) || 12
+        const exercises = exerciseDivs.map(div => {
+            const exerciseName = div.dataset.exercise;
+            const sets = parseInt(div.dataset.sets) || 3;
+            let repRange = { min: 8, max: 12, type: 'reps' };
+            if (div.dataset.repRange) {
+                try {
+                    repRange = JSON.parse(div.dataset.repRange);
+                } catch {}
+            } else {
+                if (div.dataset.rangeType === 'seconds') {
+                    repRange = { min: parseInt(div.dataset.secMin) || 30, max: parseInt(div.dataset.secMax) || 60, type: 'seconds' };
+                } else {
+                    repRange = { min: parseInt(div.dataset.repMin) || 8, max: parseInt(div.dataset.repMax) || 12, type: 'reps' };
+                }
             }
-        }));
-        
-        const editingId = this.programManager.getEditingProgramId();
-        
-        if (editingId) {
-            // Update existing program
-            this.programManager.updateProgram(editingId, name, exercises);
+            return {
+                name: exerciseName,
+                sets,
+                repRange,
+                rangeType: repRange.type
+            };
+        });
+        if (this.programManager.getEditingProgramId()) {
+            this.programManager.updateProgram(this.programManager.getEditingProgramId(), name, exercises);
+            CustomAlert.success('Program updated!', 'Success');
         } else {
-            // Create new program
             this.programManager.createProgram(name, exercises);
+            CustomAlert.success('Program saved!', 'Success');
         }
-        
-        UIManager.displayPrograms(this.programManager.getAllPrograms());
         this.resetCreateForm();
-        
-        // Switch to programs tab
+        UIManager.displayPrograms(this.programManager.getAllPrograms());
         UIManager.showProgramsTab();
-        
-        CustomAlert.success(editingId ? 'Program updated successfully!' : 'Program saved successfully!');
     }
 
     resetCreateForm() {
@@ -492,6 +596,13 @@ class ProgramEditor {
         document.getElementById('sets-input').value = '3';
         document.getElementById('rep-min-input').value = '8';
         document.getElementById('rep-max-input').value = '12';
+        document.getElementById('sec-min-input').value = '30';
+        document.getElementById('sec-max-input').value = '60';
+        document.getElementById('range-type-checkbox').checked = false;
+        document.getElementById('rep-range-fields').style.display = '';
+        document.getElementById('second-range-fields').style.display = 'none';
+        const rangeLabel = document.getElementById('range-type-label');
+        if (rangeLabel) rangeLabel.textContent = 'Rep Range';
         this.programManager.clearEditingProgram();
     }
 
