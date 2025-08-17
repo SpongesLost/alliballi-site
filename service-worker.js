@@ -1,15 +1,17 @@
-const CACHE_VERSION = "2.0.0";
+const CACHE_VERSION = "2.0.1";
 const CACHE_NAME = `pwa-cache-v${CACHE_VERSION}`;
 const CACHE_URLS = [
   "/",
   "/index.html",
   "/style.css",
   "/manifest.json",
+  // Data files
+  "/data/exercises.json",
   // JavaScript files
   "/js/app.js",
+  "/js/confetti.js",
   "/js/drag-drop-handler.js",
   "/js/exercise-selector.js",
-  "/js/exercise-swipe-handler.js",
   "/js/program-editor.js",
   "/js/program-manager.js",
   "/js/storage.js",
