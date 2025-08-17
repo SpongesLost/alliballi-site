@@ -39,7 +39,7 @@ class UIManager {
             const card = document.createElement('div');
             card.className = 'program-card';
             card.innerHTML = `
-                <h3>${program.name}</h3>
+                <h3></h3>
                 <p>${program.exercises.length} exercises • ${totalSets} total sets</p>
                 <p style="font-size: 14px;">${program.sessions.length} sessions completed</p>
                 <div class="program-actions">
@@ -48,6 +48,11 @@ class UIManager {
                     <button class="btn btn-danger" onclick="deleteProgram(${program.id})">Delete</button>
                 </div>
             `;
+            
+            // Safely set the program name as text content to prevent HTML injection
+            const nameElement = card.querySelector('h3');
+            nameElement.textContent = program.name;
+            
             container.appendChild(card);
         });
     }

@@ -147,7 +147,7 @@ class WorkoutManager {
                 // Re-setup swipe handlers after animation completes
                 setTimeout(() => {
                     this.setupSwipeHandlers();
-                    // Clear animation flag
+                    // Clear animation flag immediately for faster response
                     this.isAnimating = false;
                     // Removed auto-focus to prevent keyboard popup on mobile
                 }, 100);
@@ -166,12 +166,9 @@ class WorkoutManager {
         
         // Focus on reps input and setup swipe handlers after DOM update
         setTimeout(() => {
-            // Prevent swiping immediately after card is shown
-            this.isAnimating = true;
+            // Setup swipe handlers immediately after DOM update
             this.setupSwipeHandlers();
-            setTimeout(() => {
-                this.isAnimating = false;
-            }, 200); // 500ms delay before next swipe is allowed
+            this.isAnimating = false; // Clear immediately for faster response
             // Removed auto-focus to prevent keyboard popup on mobile
         }, 50);
     }
@@ -351,12 +348,10 @@ class WorkoutManager {
                 card.style.transform = 'translateX(0)';
                 card.style.opacity = '1';
                 
-                // Setup swipe handlers after animation completes, but delay enabling swipe
+                // Setup swipe handlers after animation completes
                 setTimeout(() => {
                     this.setupSwipeHandlers();
-                    setTimeout(() => {
-                        this.isAnimating = false;
-                    }, 200); // 200ms delay before next swipe is allowed
+                    this.isAnimating = false; // Clear immediately for faster response
                 }, 300);
             });
         }, 300);
