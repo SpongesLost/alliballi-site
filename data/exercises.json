@@ -1,268 +1,1400 @@
 [
     {
-        "name": "Push-ups",
-        "muscle": "chest",
-        "equipment": "bodyweight",
-        "aliases": ["pushups", "push ups"],
-        "modifiers": {
-            "angle": ["Standard", "Incline", "Decline"],
-            "grip": ["Diamond", "Wide", "Close"],
-            "variation": ["Archer", "One-Arm", "Clap"]
-        }
-    },
-    {
-        "name": "Bench Press",
+        "name": "Press",
         "muscle": "chest",
         "equipment": "barbell",
         "variants": [
-            { "name": "Bench Press", "equipment": "barbell" },
+            {
+                "name": "Bench Press",
+                "equipment": "barbell",
+                "aliases": ["flat bench press", "barbell bench press", "chest press"],
+                "modifiers": {
+                    "angle": ["flat", "decline", "incline"],
+                    "variation": ["floor", "spoto", "guillotine"],
+                    "grip": ["close-grip", "wide-grip", "reverse-grip"]
+                }
+            },
+            {
+                "name": "Dumbbell Press",
+                "equipment": "dumbbells",
+                "aliases": ["dumbbell bench press", "db press", "dumbell press"],
+                "modifiers": {
+                    "angle": ["flat", "decline", "incline"],
+                    "variation": ["single-arm", "alternating"]
+                }
+            },
             {
                 "name": "Smith Machine Bench Press",
                 "equipment": "machine",
+                "aliases": ["smith bench press", "machine bench press"],
                 "modifiers": {
-                    "angle": ["Flat", "Incline", "Decline"],
-                    "grip": ["Close-Grip", "Wide-Grip", "Standard"],
-                    "machineType": ["Standard", "Counterbalanced"]
+                    "angle": ["flat", "decline", "incline"],
+                    "variation": ["spoto", "guillotine"],
+                    "grip": ["close-grip", "wide-grip", "reverse-grip"]
+                }
+            },
+            {
+                "name": "Cable Press",
+                "equipment": "cable",
+                "aliases": ["cable chest press", "cable bench press"],
+                "modifiers": {
+                    "angle": ["flat", "decline", "incline"],
+                    "variation": ["single-arm", "alternating"]
+                }
+            },
+            {
+                "name": "JM Press",
+                "equipment": "barbell",
+                "aliases": ["jm bench press", "tricep bench press"]
+            }
+        ]
+    },
+    {
+        "name": "Flyes",
+        "muscle": "chest",
+        "equipment": "cable",
+        "aliases": ["flies"],
+        "variants": [
+            {
+                "name": "Cable Flyes",
+                "equipment": "cable",
+                "aliases": ["cable chest fly", "cable crossover", "cable flies"],
+                "modifiers": {
+                    "angle": ["low-to-high", "high-to-low"],
+                    "variation": ["single-arm", "crossover", "alternating"],
+                    "stance": ["standing", "seated", "half-kneeling"]
+                }
+            },
+            {
+                "name": "Dumbbell Flyes",
+                "equipment": "dumbbells",
+                "aliases": ["db flyes", "dumbbell chest fly", "dumbell flyes", "dumbell flies"],
+                "modifiers": {
+                    "angle": ["flat", "decline", "incline"],
+                    "variation": ["single-arm", "alternating"]
+                }
+            },
+            {
+                "name": "Machine Flyes",
+                "equipment": "machine",
+                "aliases": ["pec deck fly", "machine chest fly", "machine flies"],
+                "modifiers": {
+                    "angle": ["flat", "decline", "incline"],
+                    "variation": ["single-arm", "alternating"]
                 }
             }
         ]
     },
     {
-        "name": "Dumbbell Press",
-        "muscle": "chest",
-        "equipment": "dumbbells",
-        "aliases": ["db press", "dumbell press"],
-        "modifiers": {
-            "angle": ["Flat", "Incline", "Decline"],
-            "variation": ["Single-Arm", "Alternating", "Both Arms"]
-        }
-    },
-    {
-        "name": "Dumbbell Flyes",
-        "muscle": "chest",
-        "equipment": "dumbbells",
-        "aliases": ["dumbbell flies", "db flyes", "db flies", "dumbell flyes", "dumbell flies"],
-        "modifiers": {
-            "angle": ["Flat", "Incline", "Decline"]
-        }
-    },
-    {
-        "name": "Chest Dips",
-        "muscle": "chest",
-        "equipment": "bodyweight",
-        "modifiers": {
-            "variation": ["Standard", "Wide", "Weighted"]
-        }
-    },
-    {
-        "name": "Cable Chest Fly",
-        "muscle": "chest",
-        "equipment": "cable",
-        "aliases": ["cable chest flies", "cable flyes", "cable flies"],
-        "modifiers": {
-            "height": ["High", "Mid", "Low"],
-            "variation": ["Single-Arm", "Cross-over", "Both Arms"]
-        }
-    },
-    {
         "name": "Pec Deck",
         "muscle": "chest",
         "equipment": "machine",
-        "aliases": ["pec dec", "pectoral deck"],
+        "aliases": ["pec deck machine", "chest fly machine"],
         "modifiers": {
-            "variation": ["Standard", "Reverse"]
+            "variation": ["reverse"]
         }
     },
     {
-        "name": "Chest Press Machine",
+        "name": "Push-Ups",
         "muscle": "chest",
-        "equipment": "machine",
-        "modifiers": {
-            "angle": ["Flat", "Incline", "Decline"]
-        }
-    },
-    {
-        "name": "Pull-ups",
-        "muscle": "back",
         "equipment": "bodyweight",
-        "aliases": ["pullups", "pull ups", "chin ups", "chinups"],
+        "aliases": ["pushups", "push ups", "press-ups"],
         "modifiers": {
-            "grip": ["Wide", "Standard", "Chin-up", "Neutral"],
-            "variation": ["L-Sit", "Weighted", "Assisted"]
+            "angle": ["incline", "decline"],
+            "grip": ["wide", "diamond", "one-arm"],
+            "variation": ["archer", "pike", "pseudo planche", "handstand", "clap"],
+            "accessory": ["weighted", "banded"]
         }
     },
     {
-        "name": "Deadlift",
-        "muscle": "back",
-        "equipment": "barbell",
-        "aliases": ["dead lift"],
-        "modifiers": {
-            "stance": ["Conventional", "Sumo"],
-            "variation": ["Romanian", "Stiff-Leg", "Single-Leg"]
-        }
-    },
-    {
-        "name": "Rows",
-        "muscle": "back",
-        "equipment": "barbell",
-        "aliases": ["barbell rows", "bent over rows", "rowing"],
-        "modifiers": {
-            "equipment": ["Barbell", "T-Bar", "Cable", "Dumbbell"],
-            "variation": ["Single-Arm", "Wide-Grip", "Pendlay", "Inverted", "Renegade"]
-        }
-    },
-    {
-        "name": "Lat Pulldowns",
-        "muscle": "back",
-        "equipment": "machine",
-        "aliases": ["lat pulldown", "lateral pulldowns", "lat pull downs"],
-        "modifiers": {
-            "grip": ["Wide", "Standard", "Close"],
-            "position": ["Front", "Behind-Neck"]
-        }
-    },
-    {
-        "name": "Face Pulls",
-        "muscle": "back",
-        "equipment": "cable",
-        "aliases": ["face pull"],
-        "modifiers": {
-            "height": ["High", "Mid", "Low"]
-        }
-    },
-    {
-        "name": "Superman",
-        "muscle": "back",
+        "name": "Dips",
+        "muscle": "chest",
         "equipment": "bodyweight",
-        "aliases": ["superman hold", "superman exercise"],
-        "modifiers": {
-            "variation": ["Standard", "Single-Arm", "Hold"]
-        }
+        "aliases": ["parallel bar dips", "chest dips"],
+        "variants": [
+            {
+                "name": "Dips",
+                "equipment": "bodyweight",
+                "aliases": ["parallel dips", "tricep dips"],
+                "modifiers": {
+                    "accessory": ["weighted"],
+                    "equipment": ["bar"]
+                }
+            },
+            {
+                "name": "Chest Dips",
+                "equipment": "bodyweight",
+                "aliases": ["wide-grip dips", "chest-focused dips"],
+                "modifiers": {
+                    "accessory": ["weighted"]
+                }
+            },
+            {
+                "name": "Tricep Dips",
+                "equipment": "bodyweight",
+                "aliases": ["narrow-grip dips", "triceps dips"],
+                "modifiers": {
+                    "accessory": ["weighted"]
+                }
+            }
+        ]
     },
     {
-        "name": "Reverse Flyes",
-        "muscle": "back",
+        "name": "Tricep Extensions",
+        "muscle": "triceps",
         "equipment": "dumbbells",
-        "aliases": ["reverse flies", "rear delt flyes", "rear delt flies"],
+        "aliases": ["triceps extension", "overhead tricep extension"],
+        "variants": [
+            {
+                "name": "Dumbbell Overhead Tricep Extension",
+                "equipment": "dumbbells",
+                "aliases": ["db overhead tricep extension", "dumbell overhead tricep extension"],
+                "modifiers": {
+                    "variation": ["single-arm", "double-arm"],
+                    "stance": ["seated", "standing"]
+                }
+            },
+            {
+                "name": "Barbell Overhead Tricep Extension",
+                "equipment": "barbell",
+                "aliases": ["barbell tricep extension"],
+                "modifiers": {
+                    "equipment": ["EZ-bar", "straight bar"],
+                    "stance": ["seated", "standing"]
+                }
+            },
+            {
+                "name": "Cable Overhead Tricep Extension",
+                "equipment": "cable",
+                "aliases": ["cable tricep extension"],
+                "modifiers": {
+                    "attachment": ["rope", "bar"],
+                    "variation": ["single-arm", "behind-the-head"],
+                    "stance": ["standing", "kneeling"]
+                }
+            },
+            {
+                "name": "Machine Overhead Tricep Extension",
+                "equipment": "machine",
+                "aliases": ["machine tricep extension"],
+                "modifiers": {
+                    "variation": ["single-arm", "bilateral"]
+                }
+            },
+            {
+                "name": "French Press",
+                "equipment": "barbell",
+                "aliases": ["ez-bar french press", "overhead french press"],
+                "modifiers": {
+                    "equipment": ["EZ-bar", "dumbbell", "kettlebell"],
+                    "stance": ["seated", "standing"]
+                }
+            },
+            {
+                "name": "Lying Tricep Extension",
+                "equipment": "barbell",
+                "aliases": ["skull crusher", "lying ez-bar extension"],
+                "modifiers": {
+                    "equipment": ["EZ-bar", "dumbbell", "cable"],
+                    "angle": ["flat", "incline", "decline"]
+                }
+            }
+        ]
+    },
+    {
+        "name": "Pushdowns",
+        "muscle": "triceps",
+        "equipment": "cable",
+        "variants": [
+            {
+                "name": "Cable Tricep Pushdown",
+                "equipment": "cable",
+                "modifiers": {
+                    "attachment": ["rope", "straight bar", "V-bar"],
+                    "grip": ["reverse", "underhand"],
+                    "stance": ["standing", "kneeling"]
+                }
+            },
+            {
+                "name": "Band Tricep Pushdown",
+                "equipment": "resistance-band",
+                "modifiers": {
+                    "variation": ["single-arm", "bilateral", "overhead banded"]
+                }
+            },
+            {
+                "name": "Reverse-Grip Pushdown",
+                "equipment": "cable",
+                "modifiers": {
+                    "variation": ["underhand"]
+                }
+            },
+            {
+                "name": "Crossbody Pushdown",
+                "equipment": "cable",
+                "modifiers": {
+                    "attachment": ["rope"],
+                    "variation": ["single-arm"]
+                }
+            }
+        ]
+    },
+    {
+        "name": "Skull Crushers",
+        "muscle": "triceps",
+        "equipment": "barbell",
+        "variants": [
+            {
+                "name": "Barbell Skull Crusher",
+                "equipment": "barbell",
+                "modifiers": {
+                    "equipment": ["EZ-bar"],
+                    "attachment": ["straight bar"],
+                    "angle": ["flat", "incline", "decline"]
+                }
+            },
+            {
+                "name": "Dumbbell Skull Crusher",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell skull crusher"],
+                "modifiers": {
+                    "variation": ["single-arm"],
+                    "grip": ["neutral-grip", "hammer-grip"]
+                }
+            },
+            {
+                "name": "Cable Skull Crusher",
+                "equipment": "cable",
+                "modifiers": {
+                    "attachment": ["rope", "straight bar", "V-bar"],
+                    "stance": ["standing", "lying"]
+                }
+            },
+            {
+                "name": "Smith Machine Skull Crusher",
+                "equipment": "machine",
+                "modifiers": {
+                    "angle": ["incline", "decline"]
+                }
+            }
+        ]
+    },
+    {
+        "name": "Kickbacks",
+        "muscle": "triceps",
+        "equipment": "dumbbells",
+        "variants": [
+            {
+                "name": "Dumbbell Kickbacks",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell kickbacks"],
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "bench-supported"]
+                }
+            },
+            {
+                "name": "Cable Kickbacks",
+                "equipment": "cable",
+                "modifiers": {
+                    "attachment": ["rope"],
+                    "variation": ["single-arm", "bilateral"]
+                }
+            },
+            {
+                "name": "Machine Kickbacks",
+                "equipment": "machine",
+                "modifiers": {
+                    "variation": ["unilateral"],
+                    "stance": ["seated"]
+                }
+            },
+            {
+                "name": "Banded Kickbacks",
+                "equipment": "resistance-band",
+                "modifiers": {
+                    "variation": ["high-rep", "single-arm"]
+                }
+            }
+        ]
+    },
+    {
+        "name": "Tate Press",
+        "muscle": "triceps",
+        "equipment": "dumbbells",
+        "aliases": ["dumbell tate press"]
+    },
+    {
+        "name": "Rolling Dumbbell Extensions",
+        "muscle": "triceps",
+        "equipment": "dumbbells",
+        "aliases": ["rolling dumbell extensions"]
+    },
+    {
+        "name": "Bodyweight Tricep Extensions",
+        "muscle": "triceps",
+        "equipment": "bodyweight"
+    },
+    {
+        "name": "Sled/Plate Tricep Extensions",
+        "muscle": "triceps",
+        "equipment": "dumbbells",
+        "aliases": ["sled tricep extensions", "plate tricep extensions"]
+    },
+    {
+        "name": "Bicep Curls",
+        "muscle": "biceps",
+        "equipment": "dumbbells",
+        "variants": [
+            {
+                "name": "Bicep Curls",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell curls"],
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "reverse", "cross-body"],
+                    "angle": ["incline"],
+                    "stance": ["standing", "seated"]
+                }
+            },
+            {
+                "name": "Dumbbell Curls",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell curls"],
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "reverse", "cross-body"],
+                    "angle": ["incline"],
+                    "stance": ["standing", "seated"]
+                }
+            },
+            {
+                "name": "Machine Bicep Curls",
+                "equipment": "machine",
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "reverse"],
+                    "stance": ["standing", "seated"]
+                }
+            },
+            {
+                "name": "Barbell Curls",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "reverse"]
+                }
+            },
+            {
+                "name": "EZ-bar Curls",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "reverse"]
+                }
+            },
+            {
+                "name": "Cable Curls",
+                "equipment": "cable",
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "reverse", "cross-body"],
+                    "stance": ["through legs"]
+                }
+            },
+            {
+                "name": "Resistance Band Curls",
+                "equipment": "resistance-band",
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "reverse", "cross-body"]
+                }
+            },
+            {
+                "name": "Kettlebell Curls",
+                "equipment": "kettlebell",
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "reverse", "cross-body"]
+                }
+            }
+        ]
+    },
+    {
+        "name": "Hammer Curls",
+        "muscle": "biceps",
+        "equipment": "dumbbells",
+        "variants": [
+            {
+                "name": "Hammer Curls",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell hammer curls"],
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "cross-body"]
+                }
+            },
+            {
+                "name": "Dumbbell Hammer Curls",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell hammer curls"],
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "cross-body"]
+                }
+            },
+            {
+                "name": "Machine Hammer Curls",
+                "equipment": "machine",
+                "modifiers": {
+                    "variation": ["single-arm", "alternating"],
+                    "stance": ["standing", "seated"]
+                }
+            },
+            {
+                "name": "Barbell Hammer Curls",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "reverse"]
+                }
+            },
+            {
+                "name": "EZ-bar Hammer Curls",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "reverse"]
+                }
+            },
+            {
+                "name": "Cable Hammer Curls",
+                "equipment": "cable",
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "cross-body"],
+                    "stance": ["through legs"]
+                }
+            }
+        ]
+    },
+    {
+        "name": "Preacher Curls",
+        "muscle": "biceps",
+        "equipment": "dumbbells",
+        "variants": [
+            {
+                "name": "Preacher Curls",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell preacher curls"],
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "reverse"],
+                    "stance": ["seated", "standing"]
+                }
+            },
+            {
+                "name": "Machine Preacher Curls",
+                "equipment": "machine",
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "reverse"],
+                    "stance": ["seated", "standing"]
+                }
+            },
+            {
+                "name": "Dumbbell Preacher Curls",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell preacher curls"],
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "reverse"],
+                    "stance": ["seated", "standing"]
+                }
+            },
+            {
+                "name": "Barbell Preacher Curls",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["reverse"],
+                    "stance": ["seated", "standing"]
+                }
+            },
+            {
+                "name": "EZ-bar Preacher Curls",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["reverse"],
+                    "stance": ["seated", "standing"]
+                }
+            }
+        ]
+    },
+    {
+        "name": "Bayesian Curls",
+        "muscle": "biceps",
+        "equipment": "cable",
         "modifiers": {
-            "position": ["Bent-Over", "Incline", "Cable"]
+            "angle": ["decline", "incline"],
+            "variation": ["single-arm", "alternating"],
+            "stance": ["seated", "standing", "kneeling"]
         }
     },
     {
-        "name": "Overhead Press",
+        "name": "Spider Curls",
+        "muscle": "biceps",
+        "equipment": "dumbbells",
+        "variants": [
+            {
+                "name": "Spider Curls",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell spider curls"],
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "reverse"]
+                }
+            },
+            {
+                "name": "Dumbbell Spider Curls",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell spider curls"],
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "reverse"]
+                }
+            },
+            {
+                "name": "Cable Spider Curls",
+                "equipment": "cable",
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "reverse"]
+                }
+            },
+            {
+                "name": "Barbell Spider Curls",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["reverse"]
+                }
+            },
+            {
+                "name": "EZ-bar Spider Curls",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["reverse"]
+                }
+            }
+        ]
+    },
+    {
+        "name": "Strict Curls",
+        "muscle": "biceps",
+        "equipment": "dumbbells",
+        "variants": [
+            {
+                "name": "Strict Curls",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell strict curls"],
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "reverse"]
+                }
+            },
+            {
+                "name": "Dumbbell Strict Curls",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell strict curls"],
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "reverse"]
+                }
+            },
+            {
+                "name": "Cable Strict Curls",
+                "equipment": "cable",
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "reverse"]
+                }
+            },
+            {
+                "name": "Barbell Strict Curls",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["reverse"]
+                }
+            },
+            {
+                "name": "EZ-bar Strict Curls",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["reverse"]
+                }
+            }
+        ]
+    },
+    {
+        "name": "Concentration Curls",
+        "muscle": "biceps",
+        "equipment": "dumbbells",
+        "aliases": ["dumbell concentration curls"],
+        "modifiers": {
+            "variation": ["hammer"]
+        }
+    },
+    {
+        "name": "Zottman Curls",
+        "muscle": "biceps",
+        "equipment": "dumbbells",
+        "aliases": ["dumbell zottman curls"]
+    },
+    {
+        "name": "21s",
+        "muscle": "biceps",
+        "equipment": "dumbbells",
+        "aliases": ["dumbell 21s"]
+    },
+    {
+        "name": "Wrist Curls (Flexors)",
+        "muscle": "forearms",
+        "equipment": "barbell",
+        "aliases": ["wrist curls"],
+        "variants": [
+            {
+                "name": "Barbell Wrist Curl",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["seated", "standing"],
+                    "grip": ["narrow", "shoulder-width"],
+                    "accessory": ["behind-the-back"]
+                }
+            },
+            {
+                "name": "Dumbbell Wrist Curl",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell wrist curl"],
+                "modifiers": {
+                    "variation": ["single-arm", "alternating"],
+                    "stance": ["seated", "standing"]
+                }
+            },
+            {
+                "name": "Cable Wrist Curl",
+                "equipment": "cable",
+                "modifiers": {
+                    "variation": ["single-arm", "bilateral"]
+                }
+            },
+            {
+                "name": "Machine Wrist Curl",
+                "equipment": "machine",
+                "modifiers": {
+                    "variation": ["palms-up"]
+                }
+            }
+        ]
+    },
+    {
+        "name": "Reverse Wrist Curls (Extensors)",
+        "muscle": "forearms",
+        "equipment": "barbell",
+        "aliases": ["reverse wrist curls"],
+        "variants": [
+            {
+                "name": "Barbell Reverse Wrist Curl",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["EZ-bar", "straight bar"],
+                    "grip": ["narrow", "shoulder-width"]
+                }
+            },
+            {
+                "name": "Dumbbell Reverse Wrist Curl",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell reverse wrist curl"],
+                "modifiers": {
+                    "variation": ["single-arm", "alternating"]
+                }
+            },
+            {
+                "name": "Cable Reverse Wrist Curl",
+                "equipment": "cable",
+                "modifiers": {
+                    "variation": ["single-arm", "bilateral"]
+                }
+            },
+            {
+                "name": "Machine Reverse Wrist Curl",
+                "equipment": "machine",
+                "modifiers": {
+                    "variation": ["palms-down"]
+                }
+            }
+        ]
+    },
+    {
+        "name": "Radial & Ulnar Deviation",
+        "muscle": "forearms",
+        "equipment": "dumbbells",
+        "variants": [
+            {
+                "name": "Dumbbell Radial Deviation",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell radial deviation"],
+                "modifiers": {
+                    "variation": ["thumbs-up position"]
+                }
+            },
+            {
+                "name": "Dumbbell Ulnar Deviation",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell ulnar deviation"],
+                "modifiers": {
+                    "variation": ["pinky-side up"]
+                }
+            },
+            {
+                "name": "Lever Bar Wrist Rotations",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["pronation", "supination"]
+                }
+            }
+        ]
+    },
+    {
+        "name": "Grip Strength (Crushing / Pinching / Support)",
+        "muscle": "forearms",
+        "equipment": "dumbbells",
+        "aliases": ["grip strength"],
+        "variants": [
+            {
+                "name": "Plate Pinch Holds",
+                "equipment": "dumbbells",
+                "modifiers": {
+                    "variation": ["single-arm", "double-arm", "timed"]
+                }
+            },
+            {
+                "name": "Farmer's Carry",
+                "equipment": "dumbbells",
+                "modifiers": {
+                    "variation": ["heavy", "single-arm suitcase"]
+                }
+            },
+            {
+                "name": "Thick Bar / Fat Grip Holds",
+                "equipment": "barbell",
+                "aliases": ["thick bar holds", "fat grip holds"],
+                "modifiers": {
+                    "variation": ["deadlift hold", "curl hold"]
+                }
+            },
+            {
+                "name": "Towel Pull-Ups",
+                "equipment": "bodyweight",
+                "modifiers": {
+                    "variation": ["double towel", "single towel"]
+                }
+            },
+            {
+                "name": "Rope Climbs",
+                "equipment": "bodyweight",
+                "modifiers": {
+                    "variation": ["leg assist", "no legs"]
+                }
+            }
+        ]
+    },
+    {
+        "name": "Finger Strength & Isolation",
+        "muscle": "forearms",
+        "equipment": "resistance-band",
+        "aliases": ["finger strength"],
+        "variants": [
+            {
+                "name": "Finger Curls",
+                "equipment": "barbell",
+                "modifiers": {
+                    "equipment": ["barbell", "dumbbell"]
+                }
+            },
+            {
+                "name": "Rubber Band Finger Extensions",
+                "equipment": "resistance-band",
+                "modifiers": {
+                    "variation": ["single-band", "multi-band"]
+                }
+            },
+            {
+                "name": "Grippers",
+                "equipment": "resistance-band",
+                "modifiers": {
+                    "variation": ["single-hand max effort", "multiple reps"]
+                }
+            }
+        ]
+    },
+    {
+        "name": "Rotational & Pronator/Supinator",
+        "muscle": "forearms",
+        "equipment": "dumbbells",
+        "variants": [
+            {
+                "name": "Hammer Rotation",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell hammer rotation"],
+                "modifiers": {
+                    "variation": ["slow eccentric"]
+                }
+            },
+            {
+                "name": "Pronator/Supinator Bar",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["single-arm", "double-arm"]
+                }
+            },
+            {
+                "name": "Cable Pronation/Supination",
+                "equipment": "cable",
+                "modifiers": {
+                    "variation": ["light resistance for rehab"]
+                }
+            }
+        ]
+    },
+    {
+        "name": "Endurance & Pump Work",
+        "muscle": "forearms",
+        "equipment": "resistance-band",
+        "variants": [
+            {
+                "name": "Wrist Roller",
+                "equipment": "resistance-band",
+                "modifiers": {
+                    "variation": ["forward", "reverse", "weighted rope"]
+                }
+            },
+            {
+                "name": "Battle Ropes",
+                "equipment": "resistance-band",
+                "modifiers": {
+                    "variation": ["alternating waves", "double waves"]
+                }
+            },
+            {
+                "name": "High-Rep Band Wrist Curls",
+                "equipment": "resistance-band"
+            },
+            {
+                "name": "Deadhang",
+                "equipment": "bodyweight",
+                "modifiers": {
+                    "variation": ["weighted"]
+                }
+            }
+        ]
+    },
+    {
+        "name": "Overhead Press / Shoulder Press",
         "muscle": "shoulders",
         "equipment": "barbell",
-        "aliases": ["ohp", "shoulder press", "military press"],
-        "modifiers": {
-            "variation": ["Military", "Push", "Seated"],
-            "equipment": ["Barbell", "Dumbbell"]
-        }
+        "aliases": ["overhead press", "shoulder press"],
+        "variants": [
+            {
+                "name": "Barbell Overhead Press",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["standing", "seated", "strict", "push-press", "behind-the-neck"],
+                    "grip": ["narrow", "shoulder-width", "wide"],
+                    "accessory": ["chains", "bands"]
+                }
+            },
+            {
+                "name": "Dumbbell Overhead Press",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell overhead press"],
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "seated", "standing"],
+                    "angle": ["neutral-grip"]
+                }
+            },
+            {
+                "name": "Smith Machine Overhead Press",
+                "equipment": "machine",
+                "modifiers": {
+                    "variation": ["seated", "standing"]
+                }
+            },
+            {
+                "name": "Seated Machine Shoulder Press",
+                "equipment": "machine",
+                "modifiers": {
+                    "variation": ["single-arm"]
+                }
+            },
+            {
+                "name": "Arnold Press",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell arnold press"],
+                "modifiers": {
+                    "variation": ["single-arm", "alternating"]
+                }
+            },
+            {
+                "name": "Landmine Press",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["single-arm", "bilateral"],
+                    "stance": ["standing", "split-stance"]
+                }
+            }
+        ]
     },
     {
         "name": "Lateral Raises",
         "muscle": "shoulders",
         "equipment": "dumbbells",
-        "aliases": ["lateral raise", "side raises", "side raise", "lat raises"],
-        "modifiers": {
-            "direction": ["Standard", "Front", "Rear"],
-            "equipment": ["Dumbbell", "Cable"]
-        }
+        "variants": [
+            {
+                "name": "Dumbbell Lateral Raises",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell lateral raises"],
+                "modifiers": {
+                    "variation": ["wall press", "dead stop", "overhead", "three-way", "single-arm"],
+                    "stance": ["standing", "kneeling", "leaning", "seated"],
+                    "angle": ["decline", "incline"]
+                }
+            },
+            {
+                "name": "Cable Lateral Raises",
+                "equipment": "cable",
+                "modifiers": {
+                    "variation": ["low-to-high", "high-to-low"],
+                    "stance": ["standing", "seated"]
+                }
+            },
+            {
+                "name": "Machine Lateral Raises",
+                "equipment": "machine",
+                "modifiers": {
+                    "variation": ["single-arm"]
+                }
+            },
+            {
+                "name": "Banded Lateral Raises",
+                "equipment": "resistance-band",
+                "modifiers": {
+                    "variation": ["single-arm", "alternating"]
+                }
+            },
+            {
+                "name": "Lateral Raise Hold",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell lateral raise hold"],
+                "modifiers": {
+                    "variation": ["single-arm", "double-arm"]
+                }
+            },
+            {
+                "name": "T-raise / Scaption",
+                "equipment": "dumbbells",
+                "aliases": ["t-raise", "scaption", "dumbell t-raise", "dumbell scaption"],
+                "modifiers": {
+                    "variation": ["standing", "prone on incline bench"]
+                }
+            }
+        ]
     },
     {
         "name": "Front Raises",
         "muscle": "shoulders",
         "equipment": "dumbbells",
         "variants": [
-            { "name": "Front Raises", "equipment": "dumbbells" },
-            { "name": "Cable Front Raises", "equipment": "cable" }
+            {
+                "name": "Dumbbell Front Raises",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell front raises"],
+                "modifiers": {
+                    "variation": ["single-arm", "alternating", "plate"],
+                    "stance": ["standing", "seated"]
+                }
+            },
+            {
+                "name": "Barbell Front Raise",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["two-arm", "staggered grip"]
+                }
+            },
+            {
+                "name": "Cable Front Raise",
+                "equipment": "cable",
+                "modifiers": {
+                    "variation": ["single-arm", "crossover"]
+                }
+            },
+            {
+                "name": "Plate Front Raise",
+                "equipment": "dumbbells",
+                "modifiers": {
+                    "variation": ["two-arm", "staggered grip"]
+                }
+            }
         ]
     },
     {
-        "name": "Rear Delt Flyes",
+        "name": "Rear Delts",
         "muscle": "shoulders",
         "equipment": "dumbbells",
         "variants": [
-            { "name": "Rear Delt Flyes", "equipment": "dumbbells" },
-            { "name": "Cable Rear Delt Flyes", "equipment": "cable" }
+            {
+                "name": "Rear Delt Dumbbell Flyes",
+                "equipment": "dumbbells",
+                "aliases": ["rear delt dumbell flyes", "rear delt dumbell flies"],
+                "modifiers": {
+                    "angle": ["incline", "bent-over"],
+                    "variation": ["single-arm", "alternating"]
+                }
+            },
+            {
+                "name": "Rear Delt Cable Flyes",
+                "equipment": "cable",
+                "modifiers": {
+                    "variation": ["standing", "seated", "high-to-low"]
+                }
+            },
+            {
+                "name": "Reverse Pec Deck",
+                "equipment": "machine",
+                "modifiers": {
+                    "variation": ["single-arm"]
+                }
+            },
+            {
+                "name": "Face Pulls",
+                "equipment": "cable",
+                "modifiers": {
+                    "variation": ["rope", "single-arm"],
+                    "stance": ["standing", "kneeling"],
+                    "cue": ["external rotation", "scapular retraction"]
+                }
+            },
+            {
+                "name": "Bent-over Rows (rear-delt emphasis)",
+                "equipment": "barbell",
+                "aliases": ["bent-over rows"],
+                "modifiers": {
+                    "equipment": ["dumbbell", "barbell", "cable"]
+                }
+            }
         ]
     },
-    { "name": "Pike Push-ups", "muscle": "shoulders", "equipment": "bodyweight", "aliases": ["pike pushups", "pike push ups"] },
-    { "name": "Arnold Press", "muscle": "shoulders", "equipment": "dumbbells", "aliases": ["arnold shoulder press"] },
     {
-        "name": "Upright Rows",
+        "name": "Shrugs",
         "muscle": "shoulders",
         "equipment": "barbell",
         "variants": [
-            { "name": "Upright Rows", "equipment": "barbell" },
-            { "name": "Cable Upright Rows", "equipment": "cable" }
+            {
+                "name": "Barbell Shrugs",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["double-arm", "pause", "slow eccentrics"]
+                }
+            },
+            {
+                "name": "Dumbbell Shrugs",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell shrugs"],
+                "modifiers": {
+                    "variation": ["single-arm", "alternating"]
+                }
+            },
+            {
+                "name": "Machine Shrugs",
+                "equipment": "machine",
+                "modifiers": {
+                    "equipment": ["smith"],
+                    "variation": ["behind-the-back"]
+                }
+            },
+            {
+                "name": "Trap Bar Shrugs",
+                "equipment": "barbell",
+                "modifiers": {
+                    "stance": ["neutral grip"]
+                }
+            }
         ]
     },
-    { "name": "Handstand Push-ups", "muscle": "shoulders", "equipment": "bodyweight", "aliases": ["handstand pushups", "handstand push ups", "hspu"] },
-    { "name": "Wall Handstand Hold", "muscle": "shoulders", "equipment": "bodyweight", "aliases": ["handstand hold"] },
-    { "name": "Resistance Band Shoulder Press", "muscle": "shoulders", "equipment": "resistance-band" },
-    { "name": "Kettlebell Press", "muscle": "shoulders", "equipment": "kettlebell" },
-    { "name": "Kettlebell Windmill", "muscle": "shoulders", "equipment": "kettlebell" },
-    { "name": "Band Pull-Aparts", "muscle": "shoulders", "equipment": "resistance-band" },
     {
-        "name": "Bicep Curls",
-        "muscle": "biceps",
+        "name": "Cuban Press",
+        "muscle": "shoulders",
         "equipment": "dumbbells",
-        "variants": [
-            { "name": "Bicep Curls", "equipment": "dumbbells" },
-            { "name": "Barbell Curls", "equipment": "barbell" },
-            { "name": "Hammer Curls", "equipment": "dumbbells" },
-            { "name": "Concentration Curls", "equipment": "dumbbells" },
-            { "name": "Preacher Curls", "equipment": "dumbbells" },
-            { "name": "Cable Bicep Curls", "equipment": "cable" },
-            { "name": "21s (Bicep Curls)", "equipment": "dumbbells" },
-            { "name": "Zottman Curls", "equipment": "dumbbells" },
-            { "name": "Incline Dumbbell Curls", "equipment": "dumbbells" },
-            { "name": "Cable Hammer Curls", "equipment": "cable" },
-            { "name": "Resistance Band Curls", "equipment": "resistance-band" },
-            { "name": "Kettlebell Curls", "equipment": "kettlebell" }
-        ]
+        "aliases": ["dumbell cuban press"],
+        "modifiers": {
+            "variation": ["light DB", "cable"]
+        }
     },
     {
-        "name": "Tricep Exercises",
-        "muscle": "triceps",
+        "name": "External Rotation",
+        "muscle": "shoulders",
+        "equipment": "cable",
+        "modifiers": {
+            "equipment": ["cable", "band", "dumbbell"],
+            "stance": ["standing", "prone"]
+        }
+    },
+    {
+        "name": "Y-T Raises",
+        "muscle": "shoulders",
+        "equipment": "dumbbells",
+        "aliases": ["dumbell y-t raises"],
+        "modifiers": {
+            "variation": ["incline bench", "standing"]
+        }
+    },
+    {
+        "name": "Lateral Raise Variations for Prehab",
+        "muscle": "shoulders",
+        "equipment": "resistance-band",
+        "modifiers": {
+            "variation": ["band pull-aparts", "banded dislocations"]
+        }
+    },
+    {
+        "name": "Pull-Ups",
+        "muscle": "back",
         "equipment": "bodyweight",
+        "aliases": ["pullups", "pull ups"],
+        "modifiers": {
+            "variation": ["wide-grip", "neutral-grip", "close-grip", "underhand chin-up", "commando"],
+            "accessory": ["weighted", "band-assisted", "eccentric-only", "kipping", "L-sit"]
+        }
+    },
+    {
+        "name": "Chin-Ups",
+        "muscle": "back",
+        "equipment": "bodyweight",
+        "aliases": ["chinups", "chin ups"],
+        "modifiers": {
+            "variation": ["wide-grip", "neutral-grip", "close-grip", "underhand chin-up", "commando"],
+            "accessory": ["weighted", "band-assisted", "eccentric-only", "kipping", "L-sit"]
+        }
+    },
+    {
+        "name": "Pulldowns",
+        "muscle": "back",
+        "equipment": "machine",
         "variants": [
-            { "name": "Tricep Dips", "equipment": "bodyweight" },
-            { "name": "Tricep Extensions", "equipment": "dumbbells" },
-            { "name": "Overhead Tricep Extension", "equipment": "dumbbells" },
-            { "name": "Skull Crushers", "equipment": "barbell" },
-            { "name": "Close-Grip Bench Press", "equipment": "barbell" },
-            { "name": "Tricep Kickbacks", "equipment": "dumbbells" },
-            { "name": "Cable Tricep Pushdowns", "equipment": "cable" },
-            { "name": "Bench Dips", "equipment": "bodyweight" },
-            { "name": "Single-Arm Tricep Extension", "equipment": "dumbbells" },
-            { "name": "Cable Overhead Tricep Extension", "equipment": "cable" },
-            { "name": "Cable Tricep Kickbacks", "equipment": "cable" }
+            {
+                "name": "Lat Pulldown",
+                "equipment": "machine",
+                "modifiers": {
+                    "grip": ["wide", "narrow", "neutral", "reverse"],
+                    "variation": ["behind-neck [caution]", "V-handle"]
+                }
+            },
+            {
+                "name": "Straight-Arm Pulldown",
+                "equipment": "cable",
+                "modifiers": {
+                    "variation": ["single-arm"]
+                }
+            }
         ]
     },
     {
-        "name": "Wrist Exercises",
-        "muscle": "forearms",
+        "name": "Rows",
+        "muscle": "back",
+        "equipment": "barbell",
+        "variants": [
+            {
+                "name": "Row",
+                "equipment": "machine",
+                "modifiers": {
+                    "variation": ["chest-supported"],
+                    "grip": ["wide handle", "narrow handle", "single-arm"]
+                }
+            },
+            {
+                "name": "Cable Row",
+                "equipment": "cable",
+                "modifiers": {
+                    "variation": ["narrow handle", "wide handle", "V-handle", "single-arm", "straight-arm"],
+                    "stance": ["seated", "chest-supported"]
+                }
+            },
+            {
+                "name": "Barbell Row",
+                "equipment": "barbell",
+                "modifiers": {
+                    "grip": ["pronated", "supinated", "mixed"],
+                    "variation": ["underhand"],
+                    "stance": ["bent-over", "chest-supported"]
+                }
+            },
+            {
+                "name": "Dumbbell Row",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell row"],
+                "modifiers": {
+                    "variation": ["strict", "one-arm"],
+                    "stance": ["chest-supported", "staggered"]
+                }
+            },
+            {
+                "name": "Machine Row",
+                "equipment": "machine",
+                "modifiers": {
+                    "grip": ["pronated", "supinated", "mixed"],
+                    "variation": ["narrow handle", "wide handle", "V-handle", "single-arm", "one-arm", "iso-lateral", "converging handle", "diverging handle"],
+                    "stance": ["seated", "chest-supported"]
+                }
+            },
+            {
+                "name": "T-Bar Row",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["wide handle", "narrow handle", "single-arm"]
+                }
+            },
+            {
+                "name": "Inverted Row / Body Row",
+                "equipment": "bodyweight",
+                "aliases": ["inverted row", "body row"],
+                "modifiers": {
+                    "variation": ["feet elevated", "weighted", "single-arm"]
+                }
+            },
+            {
+                "name": "Meadows Row",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["single-arm", "landmine"]
+                }
+            },
+            {
+                "name": "Kroc Row",
+                "equipment": "dumbbells"
+            },
+            {
+                "name": "Pendlay Row",
+                "equipment": "barbell"
+            },
+            {
+                "name": "Yates Row",
+                "equipment": "barbell"
+            }
+        ]
+    },
+    {
+        "name": "Pullovers",
+        "muscle": "back",
         "equipment": "dumbbells",
         "variants": [
-            { "name": "Wrist Curls", "equipment": "dumbbells" },
-            { "name": "Reverse Wrist Curls", "equipment": "dumbbells" }
+            {
+                "name": "Dumbbell Pullover",
+                "equipment": "dumbbells",
+                "aliases": ["dumbell pullover"],
+                "modifiers": {
+                    "variation": ["flat bench", "single-arm"]
+                }
+            },
+            {
+                "name": "Cable Pullover",
+                "equipment": "cable",
+                "modifiers": {
+                    "variation": ["standing", "kneeling"]
+                }
+            }
         ]
+    },
+    {
+        "name": "Face Pulls",
+        "muscle": "back",
+        "equipment": "cable"
+    },
+    {
+        "name": "Reverse Flyes",
+        "muscle": "back",
+        "equipment": "dumbbells",
+        "aliases": ["reverse flies", "reverse dumbell flyes", "reverse dumbell flies"],
+        "modifiers": {
+            "equipment": ["dumbbell", "cable", "machine"]
+        }
+    },
+    {
+        "name": "Band Pull-Aparts",
+        "muscle": "back",
+        "equipment": "resistance-band",
+        "modifiers": {
+            "variation": ["overhead", "chest-height"]
+        }
+    },
+    {
+        "name": "Rack Pulls",
+        "muscle": "back",
+        "equipment": "barbell"
     },
     {
         "name": "Squats",
         "muscle": "legs",
-        "equipment": "bodyweight",
+        "equipment": "barbell",
         "variants": [
-            { "name": "Squats", "equipment": "bodyweight" },
-            { "name": "Barbell Squats", "equipment": "barbell" },
-            { "name": "Front Squats", "equipment": "barbell" },
-            { "name": "Goblet Squats", "equipment": "dumbbells" },
-            { "name": "Sumo Squats", "equipment": "bodyweight" },
-            { "name": "Jump Squats", "equipment": "bodyweight" },
-            { "name": "Pistol Squats", "equipment": "bodyweight" },
-            { "name": "Resistance Band Squats", "equipment": "resistance-band" },
-            { "name": "Kettlebell Squats", "equipment": "kettlebell" }
+            {
+                "name": "Back Squat",
+                "equipment": "barbell",
+                "modifiers": {
+                    "positioning": ["high-bar", "low-bar"],
+                    "variation": ["pause", "box-squat", "chains", "bands"],
+                    "stance": ["narrow", "shoulder-width", "wide"]
+                }
+            },
+            {
+                "name": "Front Squat",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["clean-grip", "straps", "cross-arm"]
+                }
+            },
+            {
+                "name": "Goblet Squat",
+                "equipment": "dumbbells",
+                "modifiers": {
+                    "variation": ["single-arm", "double kettlebell"]
+                }
+            },
+            {
+                "name": "Zercher Squat",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["hold position", "single-leg"]
+                }
+            },
+            {
+                "name": "Hack Squat (machine)",
+                "equipment": "machine",
+                "aliases": ["hack squat"],
+                "modifiers": {
+                    "stance": ["narrow-stance", "wide-stance"]
+                }
+            },
+            {
+                "name": "Sissy Squat",
+                "equipment": "bodyweight",
+                "modifiers": {
+                    "variation": ["bodyweight", "weighted"]
+                }
+            },
+            {
+                "name": "Bulgarian Split Squat",
+                "equipment": "bodyweight",
+                "modifiers": {
+                    "variation": ["rear-elevated", "front-foot-elevated"],
+                    "accessory": ["weighted"]
+                }
+            },
+            {
+                "name": "Pistol Squat",
+                "equipment": "bodyweight",
+                "modifiers": {
+                    "variation": ["assisted", "weighted"]
+                }
+            },
+            {
+                "name": "Cossack Squat",
+                "equipment": "bodyweight",
+                "modifiers": {
+                    "variation": ["weighted"]
+                }
+            },
+            {
+                "name": "Jefferson Squat",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["barbell", "single-side"]
+                }
+            }
         ]
     },
     {
@@ -270,141 +1402,422 @@
         "muscle": "legs",
         "equipment": "bodyweight",
         "variants": [
-            { "name": "Lunges", "equipment": "bodyweight" },
-            { "name": "Walking Lunges", "equipment": "bodyweight" },
-            { "name": "Reverse Lunges", "equipment": "bodyweight" },
-            { "name": "Bulgarian Split Squats", "equipment": "bodyweight" },
-            { "name": "Side Lunges", "equipment": "bodyweight" },
-            { "name": "Curtsy Lunges", "equipment": "bodyweight" },
-            { "name": "Kettlebell Lunges", "equipment": "kettlebell" }
+            {
+                "name": "Walking Lunges",
+                "equipment": "bodyweight",
+                "modifiers": {
+                    "variation": ["DB", "barbell", "kettlebell", "ankle weights"]
+                }
+            },
+            {
+                "name": "Reverse Lunges",
+                "equipment": "bodyweight",
+                "modifiers": {
+                    "variation": ["single-leg emphasis"]
+                }
+            },
+            {
+                "name": "Forward Lunges",
+                "equipment": "bodyweight",
+                "modifiers": {
+                    "variation": ["stepping", "stationary"]
+                }
+            }
         ]
     },
-    { "name": "Wall Sits", "muscle": "legs", "equipment": "bodyweight" },
+    {
+        "name": "Deadlifts",
+        "muscle": "legs",
+        "equipment": "barbell",
+        "variants": [
+            {
+                "name": "Deadlift",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["conventional", "sumo", "single-leg", "deficit", "paused"],
+                    "grip": ["mixed grip", "hook grip"]
+                }
+            },
+            {
+                "name": "Romanian Deadlift",
+                "equipment": "barbell",
+                "modifiers": {
+                    "equipment": ["barbell", "dumbbell"],
+                    "variation": ["single-leg", "snatch-grip"]
+                }
+            },
+            {
+                "name": "Stiff-Leg Deadlift",
+                "equipment": "barbell",
+                "modifiers": {
+                    "equipment": ["barbell", "dumbbell"]
+                }
+            },
+            {
+                "name": "Trap Bar Deadlift",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["conventional", "sumo"]
+                }
+            }
+        ]
+    },
+    {
+        "name": "Hip Thrust",
+        "muscle": "legs",
+        "equipment": "barbell",
+        "modifiers": {
+            "equipment": ["barbell"],
+            "variation": ["single-leg", "pause"],
+            "accessory": ["banded"]
+        }
+    },
+    {
+        "name": "Leg Extension",
+        "muscle": "legs",
+        "equipment": "machine",
+        "modifiers": {
+            "variation": ["single-leg", "pulse"]
+        }
+    },
+    {
+        "name": "Leg Curls",
+        "muscle": "legs",
+        "equipment": "machine",
+        "variants": [
+            {
+                "name": "Lying Leg Curl",
+                "equipment": "machine",
+                "modifiers": {
+                    "variation": ["single-leg"]
+                }
+            },
+            {
+                "name": "Seated Leg Curl",
+                "equipment": "machine"
+            },
+            {
+                "name": "Cable Leg Curl",
+                "equipment": "cable",
+                "modifiers": {
+                    "variation": ["kneeling"]
+                }
+            },
+            {
+                "name": "Nordic Hamstring Curl",
+                "equipment": "bodyweight",
+                "modifiers": {
+                    "variation": ["assisted", "banded"]
+                }
+            }
+        ]
+    },
     {
         "name": "Calf Raises",
         "muscle": "legs",
         "equipment": "bodyweight",
         "variants": [
-            { "name": "Calf Raises", "equipment": "bodyweight" },
-            { "name": "Single-Leg Calf Raises", "equipment": "bodyweight" }
+            {
+                "name": "Standing Calf Raise",
+                "equipment": "bodyweight",
+                "modifiers": {
+                    "variation": ["single-leg", "pause at top"],
+                    "equipment": ["smith", "machine", "barbell"]
+                }
+            },
+            {
+                "name": "Seated Calf Raise",
+                "equipment": "machine",
+                "modifiers": {
+                    "variation": ["single-leg"]
+                }
+            },
+            {
+                "name": "Donkey Calf Raise",
+                "equipment": "bodyweight",
+                "modifiers": {
+                    "variation": ["weighted"]
+                }
+            },
+            {
+                "name": "Calf Holds",
+                "equipment": "bodyweight"
+            }
         ]
     },
-    { "name": "Leg Press", "muscle": "legs", "equipment": "machine" },
-    { "name": "Leg Curls", "muscle": "legs", "equipment": "machine" },
-    { "name": "Leg Extensions", "muscle": "legs", "equipment": "machine" },
-    { "name": "Hack Squats", "muscle": "legs", "equipment": "machine" },
-    { "name": "Step-ups", "muscle": "legs", "equipment": "bodyweight" },
-    { "name": "Box Jumps", "muscle": "legs", "equipment": "bodyweight" },
     {
-        "name": "Glute Bridges",
+        "name": "Calf Press",
+        "muscle": "legs",
+        "equipment": "machine"
+    },
+    {
+        "name": "Sled",
         "muscle": "legs",
         "equipment": "bodyweight",
         "variants": [
-            { "name": "Glute Bridges", "equipment": "bodyweight" },
-            { "name": "Single-Leg Glute Bridges", "equipment": "bodyweight" },
-            { "name": "Hip Thrusts", "equipment": "bodyweight" }
+            {
+                "name": "Sled Push",
+                "equipment": "bodyweight",
+                "modifiers": {
+                    "variation": ["heavy", "speed-work"]
+                }
+            },
+            {
+                "name": "Sled Pull",
+                "equipment": "bodyweight",
+                "modifiers": {
+                    "variation": ["heavy", "speed-work"]
+                }
+            }
         ]
     },
     {
-        "name": "Plank",
-        "muscle": "core",
+        "name": "Good Mornings",
+        "muscle": "legs",
+        "equipment": "barbell",
+        "modifiers": {
+            "variation": ["barbell", "banded"]
+        }
+    },
+    {
+        "name": "Glute-Ham Raise",
+        "muscle": "legs",
+        "equipment": "machine",
+        "modifiers": {
+            "variation": ["machine", "partner-assisted"]
+        }
+    },
+    {
+        "name": "Step-Ups",
+        "muscle": "legs",
         "equipment": "bodyweight",
-        "variants": [
-            { "name": "Plank", "equipment": "bodyweight" },
-            { "name": "Side Plank", "equipment": "bodyweight" },
-            { "name": "Plank Up-Downs", "equipment": "bodyweight" },
-            { "name": "Plank Jacks", "equipment": "bodyweight" },
-            { "name": "Plank to Downward Dog", "equipment": "bodyweight" }
-        ]
+        "modifiers": {
+            "variation": ["height", "weighted", "alternating"]
+        }
+    },
+    {
+        "name": "Cable Pull-Through",
+        "muscle": "legs",
+        "equipment": "cable",
+        "modifiers": {
+            "variation": ["single-leg"]
+        }
+    },
+    {
+        "name": "Clamshells",
+        "muscle": "legs",
+        "equipment": "resistance-band",
+        "modifiers": {
+            "variation": ["side-lying", "standing"]
+        }
+    },
+    {
+        "name": "Kettlebell Swing",
+        "muscle": "legs",
+        "equipment": "kettlebell",
+        "modifiers": {
+            "variation": ["Russian", "American"]
+        }
     },
     {
         "name": "Crunches",
         "muscle": "core",
         "equipment": "bodyweight",
         "variants": [
-            { "name": "Crunches", "equipment": "bodyweight" },
-            { "name": "Decline Crunches", "equipment": "bodyweight" },
-            { "name": "Bicycle Crunches", "equipment": "bodyweight" },
-            { "name": "Reverse Crunches", "equipment": "bodyweight" },
-            { "name": "Cable Crunches", "equipment": "cable" }
+            {
+                "name": "Cable Crunch",
+                "equipment": "cable",
+                "modifiers": {
+                    "variation": ["kneeling", "standing"]
+                }
+            },
+            {
+                "name": "Machine Crunch",
+                "equipment": "machine",
+                "modifiers": {
+                    "variation": ["weighted"]
+                }
+            },
+            {
+                "name": "Reverse Crunch",
+                "equipment": "bodyweight",
+                "modifiers": {
+                    "variation": ["on bench", "slow eccentrics"]
+                }
+            },
+            {
+                "name": "Bicycle Crunch",
+                "equipment": "bodyweight",
+                "modifiers": {
+                    "tempo": ["controlled"]
+                }
+            }
         ]
     },
-    { "name": "Russian Twists", "muscle": "core", "equipment": "bodyweight", "aliases": ["russian twist"] },
-    { "name": "Dead Bug", "muscle": "core", "equipment": "bodyweight", "aliases": ["deadbug"] },
-    { "name": "Bird Dog", "muscle": "core", "equipment": "bodyweight", "aliases": ["birddog"] },
     {
-        "name": "Hanging Leg Raises",
+        "name": "Rollout",
         "muscle": "core",
         "equipment": "bodyweight",
         "variants": [
-            { "name": "Hanging Leg Raises", "equipment": "bodyweight" },
-            { "name": "Hanging Knee Raises", "equipment": "bodyweight" }
+            {
+                "name": "Ab Wheel Rollout",
+                "equipment": "bodyweight",
+                "modifiers": {
+                    "variation": ["from knees", "from toes", "single-arm"]
+                }
+            },
+            {
+                "name": "Barbell Rollout",
+                "equipment": "barbell",
+                "modifiers": {
+                    "variation": ["landmine"]
+                }
+            }
         ]
     },
-    { "name": "Ab Wheel Rollouts", "muscle": "core", "equipment": "bodyweight" },
-    { "name": "V-Ups", "muscle": "core", "equipment": "bodyweight" },
     {
-        "name": "Sit-ups",
+        "name": "Carry",
+        "muscle": "core",
+        "equipment": "dumbbells",
+        "variants": [
+            {
+                "name": "Farmer Carry",
+                "equipment": "dumbbells",
+                "modifiers": {
+                    "variation": ["heavy", "suitcase", "single-arm"]
+                }
+            },
+            {
+                "name": "Suitcase Carry",
+                "equipment": "dumbbells",
+                "modifiers": {
+                    "variation": ["belted", "suitcase"]
+                }
+            },
+            {
+                "name": "Overhead Carry",
+                "equipment": "dumbbells",
+                "modifiers": {
+                    "variation": ["single-arm", "double-arm"]
+                }
+            }
+        ]
+    },
+    {
+        "name": "Raises",
         "muscle": "core",
         "equipment": "bodyweight",
         "variants": [
-            { "name": "Sit-ups", "equipment": "bodyweight" },
-            { "name": "Weighted Sit-ups", "equipment": "dumbbells" }
+            {
+                "name": "Hanging Leg Raise",
+                "equipment": "bodyweight",
+                "modifiers": {
+                    "variation": ["straight-leg", "toes-to-bar", "windshield wipers"]
+                }
+            },
+            {
+                "name": "Knee Raise",
+                "equipment": "bodyweight",
+                "modifiers": {
+                    "variation": ["weighted"]
+                }
+            },
+            {
+                "name": "Lying Leg Raise",
+                "equipment": "bodyweight",
+                "modifiers": {
+                    "variation": ["slow eccentrics", "bent-knee"]
+                }
+            }
         ]
     },
-    { "name": "Leg Raises", "muscle": "core", "equipment": "bodyweight" },
-    { "name": "Flutter Kicks", "muscle": "core", "equipment": "bodyweight" },
-    { "name": "Scissors", "muscle": "core", "equipment": "bodyweight" },
-    { "name": "Hollow Body Hold", "muscle": "core", "equipment": "bodyweight" },
-    { "name": "Superman Hold", "muscle": "core", "equipment": "bodyweight" },
     {
-        "name": "Cable Core Exercises",
+        "name": "Plank",
+        "muscle": "core",
+        "equipment": "bodyweight",
+        "modifiers": {
+            "variation": ["front", "side", "elevated", "RKC", "weighted", "single-arm"]
+        }
+    },
+    {
+        "name": "Hollow Hold",
+        "muscle": "core",
+        "equipment": "bodyweight",
+        "modifiers": {
+            "variation": ["weighted", "rocking"]
+        }
+    },
+    {
+        "name": "Pallof Press",
         "muscle": "core",
         "equipment": "cable",
-        "variants": [
-            { "name": "Cable Woodchoppers", "equipment": "cable" },
-            { "name": "Pallof Press", "equipment": "cable" },
-            { "name": "Cable Russian Twists", "equipment": "cable" },
-            { "name": "Cable Side Bends", "equipment": "cable" }
-        ]
+        "modifiers": {
+            "equipment": ["cable", "band"],
+            "variation": ["standing", "half-kneeling", "single-arm"]
+        }
     },
-    { "name": "Medicine Ball Slams", "muscle": "core", "equipment": "dumbbells" },
-    { "name": "Russian Twists with Weight", "muscle": "core", "equipment": "dumbbells" },
-    { "name": "Kettlebell Russian Twists", "muscle": "core", "equipment": "kettlebell" },
-    { "name": "Mountain Climbers", "muscle": "cardio", "equipment": "bodyweight", "aliases": ["mountain climber"] },
-    { "name": "Burpees", "muscle": "cardio", "equipment": "bodyweight", "aliases": ["burpee"] },
-    { "name": "Jumping Jacks", "muscle": "cardio", "equipment": "bodyweight", "aliases": ["jumping jack", "star jumps"] },
-    { "name": "High Knees", "muscle": "cardio", "equipment": "bodyweight" },
-    { "name": "Butt Kickers", "muscle": "cardio", "equipment": "bodyweight" },
-    { "name": "Jump Rope", "muscle": "cardio", "equipment": "resistance-band" },
-    { "name": "Star Jumps", "muscle": "cardio", "equipment": "bodyweight" },
-    { "name": "Squat Jumps", "muscle": "cardio", "equipment": "bodyweight" },
-    { "name": "Tuck Jumps", "muscle": "cardio", "equipment": "bodyweight" },
-    { "name": "Lateral Bounds", "muscle": "cardio", "equipment": "bodyweight" },
-    { "name": "Bear Crawls", "muscle": "cardio", "equipment": "bodyweight" },
-    { "name": "Crab Walks", "muscle": "cardio", "equipment": "bodyweight" },
-    { "name": "Sprint Intervals", "muscle": "cardio", "equipment": "bodyweight" },
-    { "name": "Battle Ropes", "muscle": "cardio", "equipment": "resistance-band" },
-    { "name": "Rowing Machine", "muscle": "cardio", "equipment": "machine" },
-    { "name": "Bike Sprints", "muscle": "cardio", "equipment": "machine" },
-    { "name": "Stair Climbing", "muscle": "cardio", "equipment": "bodyweight" },
-    { "name": "Shadow Boxing", "muscle": "cardio", "equipment": "bodyweight" },
-    { "name": "Thrusters", "muscle": "full-body", "equipment": "dumbbells" },
-    { "name": "Man Makers", "muscle": "full-body", "equipment": "dumbbells" },
-    { "name": "Kettlebell Swings", "muscle": "full-body", "equipment": "kettlebell" },
-    { "name": "Turkish Get-ups", "muscle": "full-body", "equipment": "kettlebell" },
-    { "name": "Clean and Press", "muscle": "full-body", "equipment": "barbell" },
-    { "name": "Clean and Jerk", "muscle": "full-body", "equipment": "barbell" },
-    { "name": "Snatch", "muscle": "full-body", "equipment": "barbell" },
-    { "name": "Dumbbell Snatches", "muscle": "full-body", "equipment": "dumbbells" },
-    { "name": "Burpee Box Jumps", "muscle": "full-body", "equipment": "bodyweight" },
-    { "name": "Devil's Press", "muscle": "full-body", "equipment": "dumbbells" },
-    { "name": "Renegade Rows", "muscle": "full-body", "equipment": "dumbbells" },
-    { "name": "Farmers Walk", "muscle": "full-body", "equipment": "dumbbells" },
-    { "name": "Kettlebell Clean and Press", "muscle": "full-body", "equipment": "kettlebell" },
-    { "name": "Sandbag Carries", "muscle": "full-body", "equipment": "dumbbells" },
-    { "name": "Atlas Stone Lifts", "muscle": "full-body", "equipment": "dumbbells" },
-    { "name": "Tire Flips", "muscle": "full-body", "equipment": "bodyweight" },
-    { "name": "Sledgehammer Swings", "muscle": "full-body", "equipment": "dumbbells" },
-    { "name": "Wall Balls", "muscle": "full-body", "equipment": "dumbbells" }
+    {
+        "name": "Cable Woodchopper",
+        "muscle": "core",
+        "equipment": "cable",
+        "modifiers": {
+            "variation": ["high-to-low", "low-to-high", "single-arm", "bilateral"]
+        }
+    },
+    {
+        "name": "Landmine Twist",
+        "muscle": "core",
+        "equipment": "barbell",
+        "modifiers": {
+            "variation": ["standing", "kneeling"]
+        }
+    },
+    {
+        "name": "Dragon Flag",
+        "muscle": "core",
+        "equipment": "bodyweight",
+        "modifiers": {
+            "variation": ["assisted"]
+        }
+    },
+    {
+        "name": "Russian Twist",
+        "muscle": "core",
+        "equipment": "bodyweight",
+        "modifiers": {
+            "equipment": ["plate", "DB"],
+            "variation": ["feet elevated", "weighted"]
+        }
+    },
+    {
+        "name": "Medicine Ball Slams / Rotational Throws",
+        "muscle": "core",
+        "equipment": "dumbbells",
+        "aliases": ["medicine ball slams", "rotational throws"]
+    },
+    {
+        "name": "Back Extension",
+        "muscle": "core",
+        "equipment": "bodyweight",
+        "modifiers": {
+            "equipment": ["cable"],
+            "variation": ["weighted", "glute-focused"]
+        }
+    },
+    {
+        "name": "Bird Dog",
+        "muscle": "core",
+        "equipment": "bodyweight",
+        "modifiers": {
+            "variation": ["slow", "alternating", "weighted ankle"]
+        }
+    },
+    {
+        "name": "Deadbug",
+        "muscle": "core",
+        "equipment": "bodyweight",
+        "modifiers": {
+            "variation": ["band-resisted"]
+        }
+    }
 ]

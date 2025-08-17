@@ -283,26 +283,34 @@ class ExerciseSelector {
             if (filteredExercises.length === 0) {
                 this.categoriesContainer.innerHTML = `
                     <div class="no-exercises" style="margin-bottom: 8px;">No exercises found</div>
-                    ${searchTerm ? `<button id="add-custom-exercise-btn" class="btn btn-small" style="margin: 0 auto; display:block;padding:7px 14px;font-size:13px;max-width:250px;align">Add "${searchTerm}" as new exercise</button>` : ''}
+                    <button id="add-custom-exercise-btn" class="btn btn-small" style="margin: 0 auto; display:block;padding:7px 14px;font-size:13px;max-width:250px;">Add "${searchTerm}" as new exercise</button>
                 `;
-                if (searchTerm) {
-                    setTimeout(() => {
-                        const btn = document.getElementById('add-custom-exercise-btn');
-                        if (btn) {
-                            btn.addEventListener('click', () => {
-                                this.addCustomExerciseFromSearch(searchTerm);
-                            });
-                        }
-                    }, 0);
-                }
-                return;
+            } else {
+                // Show results AND add button at bottom
+                html += `<div class="exercise-category">
+                    <div class="category-header">Results</div>
+                    ${filteredExercises.map(exercise => this.renderExerciseItem(exercise)).join('')}
+                </div>`;
+                // Add the "Add as new exercise" button at the bottom
+                html += `<div style="margin-top: 12px; padding: 8px;">
+                    <button id="add-custom-exercise-btn" class="btn btn-small" style="margin: 0 auto; display:block;padding:7px 14px;font-size:13px;max-width:250px;">Add "${searchTerm}" as new exercise</button>
+                </div>`;
+                this.categoriesContainer.innerHTML = html;
             }
-            html += `<div class="exercise-category">
-                <div class="category-header">Results</div>
-                ${filteredExercises.map(exercise => this.renderExerciseItem(exercise)).join('')}
-            </div>`;
-            this.categoriesContainer.innerHTML = html;
-            this.attachExerciseClickListeners();
+            
+            // Attach event listener for the add button
+            setTimeout(() => {
+                const btn = document.getElementById('add-custom-exercise-btn');
+                if (btn) {
+                    btn.addEventListener('click', () => {
+                        this.addCustomExerciseFromSearch(searchTerm);
+                    });
+                }
+            }, 0);
+            
+            if (filteredExercises.length > 0) {
+                this.attachExerciseClickListeners();
+            }
             return;
         }
 
@@ -335,7 +343,9 @@ class ExerciseSelector {
 
     addCustomExerciseFromSearch(name) {
         // Capitalize the first letter of each word
-        const capitalizedName = name.replace(/\b\w/g, c => c.toUpperCase());
+        const capitalizedName = name.split(' ').map(word => 
+            word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        ).join(' ');
         const customExercise = {
             name: capitalizedName,
             muscle: '',
@@ -473,7 +483,11 @@ class ExerciseSelector {
                                 const selectedValue = select.value;
                                 if (selectedValue) {
                                     selectedModifiers[modifierType] = selectedValue;
-                                    modifierParts.push(selectedValue);
+                                    // Capitalize first letter of each word in modifier
+                                    const capitalizedModifier = selectedValue.split(' ').map(word => 
+                                        word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                                    ).join(' ');
+                                    modifierParts.push(capitalizedModifier);
                                 }
                             });
                             if (modifierParts.length > 0) {
@@ -635,7 +649,11 @@ class ExerciseSelector {
                     
                     if (selectedValue) {
                         selectedModifiers[modifierType] = selectedValue;
-                        modifierParts.push(selectedValue);
+                        // Capitalize first letter of each word in modifier
+                        const capitalizedModifier = selectedValue.split(' ').map(word => 
+                            word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                        ).join(' ');
+                        modifierParts.push(capitalizedModifier);
                     }
                 });
                 

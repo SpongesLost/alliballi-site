@@ -912,18 +912,12 @@ input[type=number] {
 .exercise-dropdown-body {
     flex: 1;
     overflow-y: auto;
-    /* Hide scrollbar */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer 10+ */
     /* Ensure content is visible */
     display: block;
     width: 100%;
     height: 100%;
 }
 
-.exercise-dropdown-body::-webkit-scrollbar {
-    display: none; /* Safari and Chrome */
-}
 
 .exercise-categories {
     /* Ensure the categories container is visible */
@@ -1584,15 +1578,8 @@ input[type=number] {
     max-height: 200px;
     overflow-y: auto;
     margin-top: 2px;
-    /* Hide scrollbar */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer 10+ */
     /* Prevent click-through */
     pointer-events: auto;
-}
-
-.variants-dropdown::-webkit-scrollbar {
-    display: none; /* Safari and Chrome */
 }
 
 .exercise-item.variants-open .variants-dropdown {
@@ -1746,7 +1733,7 @@ input[type=number] {
 }
 
 /* Prevent click effect on exercise item when clicking modifier dropdown */
-.exercise-item:has(.modifier-select:active) {
+.exercise-item {
     transform: none !important;
 }
 
