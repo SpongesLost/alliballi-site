@@ -63,7 +63,7 @@ body {
 
 .content {
     flex: 1;
-    padding: 16px 8px;
+    padding: 16px 8px 80px;
     overflow-y: auto;
 }
 
@@ -406,16 +406,33 @@ body {
     border-top: 1px solid #48484a;
 }
 
+/* ===== BOTTOM BUTTONS ===== */
+.bottom-buttons {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(44, 44, 46, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid #48484a;
+    padding: 12px 20px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
 .import-export-buttons {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
     justify-content: center;
+    max-width: 400px;
+    margin: 0 auto;
 }
 
 .import-export-buttons .btn {
     min-width: 120px;
     font-size: 14px;
+    flex: 1;
 }
 
 /* ===== EXPORT DIALOG ===== */
@@ -1477,7 +1494,16 @@ input[type=number] {
     }
     
     .content {
-        padding: 16px;
+        padding: 16px 16px 80px;
+    }
+    
+    .bottom-buttons {
+        padding: 10px 16px;
+    }
+    
+    .import-export-buttons .btn {
+        min-width: 100px;
+        font-size: 13px;
     }
     
     .program-form {

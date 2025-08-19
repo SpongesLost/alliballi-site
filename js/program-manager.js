@@ -84,7 +84,7 @@ class ProgramManager {
         return exportData;
     }
 
-    exportSelectedPrograms(selectedPrograms) {
+    exportSelectedPrograms(selectedPrograms, includeSessionData = true) {
         const exportData = {
             version: "1.0",
             exportDate: new Date().toISOString(),
@@ -92,7 +92,7 @@ class ProgramManager {
                 id: program.id,
                 name: program.name,
                 exercises: program.exercises,
-                sessions: program.sessions || []
+                sessions: includeSessionData ? (program.sessions || []) : []
             }))
         };
         
@@ -103,9 +103,11 @@ class ProgramManager {
         let filename;
         if (selectedPrograms.length === 1) {
             const safeName = selectedPrograms[0].name.replace(/[^a-z0-9]/gi, '-').toLowerCase();
-            filename = `fitness-program-${safeName}-${new Date().toISOString().split('T')[0]}.json`;
+            const sessionSuffix = includeSessionData ? '' : '-clean';
+            filename = `fitness-program-${safeName}${sessionSuffix}-${new Date().toISOString().split('T')[0]}.json`;
         } else {
-            filename = `fitness-programs-selected-${new Date().toISOString().split('T')[0]}.json`;
+            const sessionSuffix = includeSessionData ? '' : '-clean';
+            filename = `fitness-programs-selected${sessionSuffix}-${new Date().toISOString().split('T')[0]}.json`;
         }
         
         const link = document.createElement('a');
@@ -132,7 +134,7 @@ class ProgramManager {
                 // Always import programs, even if names are duplicated
                 // This allows multiple "Upper", "Lower", etc. programs
                 const newProgram = {
-                    id: Date.now() + Math.random(), // Ensure unique ID
+                    id: Date.now() + Math.floor(Math.random() * 1000), // Ensure unique integer ID
                     name: importProgram.name,
                     exercises: importProgram.exercises || [],
                     sessions: importProgram.sessions || []

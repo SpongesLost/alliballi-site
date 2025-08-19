@@ -90,8 +90,21 @@ class UIManager {
                 return;
             }
             
-            // Show program selection dialog
-            UIManager.showProgramSelectionDialog(allPrograms);
+            // For single program or "export all", show simplified dialog
+            if (allPrograms.length === 1) {
+                UIManager.showSessionDataDialog(() => {
+                    const includeSessionData = document.getElementById('simple-include-session-data').checked;
+                    const exportData = window.app.programManager.exportSelectedPrograms(allPrograms, includeSessionData);
+                    const sessionText = includeSessionData ? 'with workout history' : 'without workout history';
+                    CustomAlert.success(
+                        `Exported ${exportData.programs.length} programs successfully ${sessionText}!`,
+                        'Export Complete'
+                    );
+                });
+            } else {
+                // Show program selection dialog
+                UIManager.showProgramSelectionDialog(allPrograms);
+            }
         } catch (error) {
             CustomAlert.error(
                 'Failed to load programs for export.',
@@ -99,6 +112,58 @@ class UIManager {
             );
             console.error('Export error:', error);
         }
+    }
+
+    static showSessionDataDialog(onConfirm) {
+        // Remove existing dialog if any
+        const existingDialog = document.querySelector('.session-data-dialog');
+        if (existingDialog) {
+            existingDialog.remove();
+        }
+
+        // Create simple session data dialog
+        const dialog = document.createElement('div');
+        dialog.className = 'session-data-dialog export-dialog';
+        dialog.innerHTML = `
+            <div class="export-dialog-content">
+                <div class="export-dialog-header">
+                    <h3>Export Options</h3>
+                    <button class="export-dialog-close" onclick="this.closest('.session-data-dialog').remove()">×</button>
+                </div>
+                <div class="export-dialog-body">
+                    <div class="export-options">
+                        <label class="export-option">
+                            <input type="checkbox" id="simple-include-session-data" checked>
+                            <span>Include completed workout sessions</span>
+                        </label>
+                        <p style="color: #8e8e93; font-size: 14px; margin-top: 8px;">
+                            Unchecking this will export clean programs without any workout history, 
+                            perfect for sharing templates or starting fresh.
+                        </p>
+                    </div>
+                </div>
+                <div class="export-dialog-footer">
+                    <button class="btn btn-secondary" onclick="this.closest('.session-data-dialog').remove()">Cancel</button>
+                    <button class="btn btn-primary" onclick="this.closest('.session-data-dialog').remove(); (${onConfirm.toString()})()">Export</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(dialog);
+
+        // Show with animation
+        setTimeout(() => {
+            dialog.classList.add('show');
+        }, 10);
+
+        // Handle escape key
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                dialog.remove();
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
     }
 
     static showProgramSelectionDialog(programs) {
@@ -123,13 +188,21 @@ class UIManager {
                             <input type="checkbox" id="select-all-programs" onchange="UIManager.toggleAllPrograms(this)">
                             <span>Select All</span>
                         </label>
+                        <label class="export-option">
+                            <input type="checkbox" id="include-session-data" checked>
+                            <span>Include completed workout sessions</span>
+                        </label>
+                        <p style="color: #8e8e93; font-size: 14px; margin: 8px 12px 16px 12px;">
+                            Unchecking this will export clean programs without workout history, 
+                            perfect for sharing templates or starting fresh.
+                        </p>
                     </div>
                     <div class="program-selection-list">
                         ${programs.map(program => `
                             <label class="export-option program-option">
                                 <input type="checkbox" class="program-checkbox" value="${program.id}">
                                 <span class="program-info">
-                                    <strong>${program.name}</strong>
+                                    <strong data-program-name="${program.id}"></strong>
                                     <small>${program.exercises.length} exercises • ${program.sessions.length} sessions</small>
                                 </span>
                             </label>
@@ -144,6 +217,14 @@ class UIManager {
         `;
 
         document.body.appendChild(dialog);
+
+        // Safely set program names to prevent HTML injection
+        programs.forEach(program => {
+            const nameElement = dialog.querySelector(`[data-program-name="${program.id}"]`);
+            if (nameElement) {
+                nameElement.textContent = program.name;
+            }
+        });
 
         // Show with animation
         setTimeout(() => {
@@ -177,12 +258,26 @@ class UIManager {
 
         const selectedIds = Array.from(selectedCheckboxes).map(cb => parseInt(cb.value));
         const allPrograms = window.app.programManager.getAllPrograms();
+        const includeSessionData = document.getElementById('include-session-data').checked;
+        
+        console.log('Selected IDs:', selectedIds);
+        console.log('All programs:', allPrograms.map(p => ({ id: p.id, name: p.name })));
+        console.log('Include session data:', includeSessionData);
+        
         const selectedPrograms = allPrograms.filter(program => selectedIds.includes(program.id));
+        
+        console.log('Selected programs:', selectedPrograms);
+
+        if (selectedPrograms.length === 0) {
+            CustomAlert.error('No matching programs found. This may be due to an ID mismatch.', 'Export Error');
+            return;
+        }
 
         try {
-            const exportData = window.app.programManager.exportSelectedPrograms(selectedPrograms);
+            const exportData = window.app.programManager.exportSelectedPrograms(selectedPrograms, includeSessionData);
+            const sessionText = includeSessionData ? 'with workout history' : 'without workout history';
             CustomAlert.success(
-                `Exported ${exportData.programs.length} selected programs successfully!`,
+                `Exported ${exportData.programs.length} selected programs successfully ${sessionText}!`,
                 'Export Complete'
             );
             

@@ -29,12 +29,6 @@
                 <div id="programs-list" class="programs-grid">
                     <!-- Programs will be populated here -->
                 </div>
-                <div class="programs-footer">
-                    <div class="import-export-buttons">
-                        <button class="btn btn-secondary" onclick="exportPrograms()">Export Programs</button>
-                        <button class="btn btn-secondary" onclick="importPrograms()">Import Programs</button>
-                    </div>
-                </div>
                 <!-- Hidden file input for importing -->
                 <input type="file" id="import-file-input" accept=".json" style="display: none;" onchange="handleFileImport(event)">
             </div>
@@ -183,6 +177,14 @@
                         <!-- Exercise content will be populated here -->
                     </div>
                 </div>
+            </div>
+        </div>
+        
+        <!-- Fixed bottom buttons for import/export -->
+        <div class="bottom-buttons">
+            <div class="import-export-buttons">
+                <button class="btn btn-secondary" onclick="exportPrograms()">Export Programs</button>
+                <button class="btn btn-secondary" onclick="importPrograms()">Import Programs</button>
             </div>
         </div>
     </div>
