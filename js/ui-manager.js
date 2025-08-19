@@ -19,6 +19,18 @@ class UIManager {
             event.target.classList.add('active');
         }
 
+        // Show/hide bottom buttons based on tab
+        const bottomButtons = document.querySelector('.bottom-buttons');
+        if (bottomButtons) {
+            if (tabName === 'programs') {
+                bottomButtons.classList.remove('hidden');
+                document.body.classList.remove('hide-bottom-buttons');
+            } else {
+                bottomButtons.classList.add('hidden');
+                document.body.classList.add('hide-bottom-buttons');
+            }
+        }
+
         // Reset edit mode when switching tabs
         if (tabName !== 'create') {
             window.programEditor.resetCreateForm();
@@ -73,12 +85,26 @@ class UIManager {
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.classList.remove('active');
         });
+
+        // Hide bottom buttons in workout mode
+        const bottomButtons = document.querySelector('.bottom-buttons');
+        if (bottomButtons) {
+            bottomButtons.classList.add('hidden');
+            document.body.classList.add('hide-bottom-buttons');
+        }
     }
 
     static showProgramsTab() {
         UIManager.showTab('programs');
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelector('.tab-btn').classList.add('active');
+        
+        // Ensure bottom buttons are visible when showing programs tab
+        const bottomButtons = document.querySelector('.bottom-buttons');
+        if (bottomButtons) {
+            bottomButtons.classList.remove('hidden');
+            document.body.classList.remove('hide-bottom-buttons');
+        }
     }
 
     static exportPrograms() {

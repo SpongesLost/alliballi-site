@@ -65,6 +65,12 @@ body {
     flex: 1;
     padding: 16px 8px 100px;
     overflow-y: auto;
+    transition: padding-bottom 0.3s ease;
+}
+
+/* Adjust content padding when bottom buttons are hidden */
+body.hide-bottom-buttons .content {
+    padding-bottom: 16px;
 }
 
 
@@ -1494,6 +1500,11 @@ input[type=number] {
     
     .content {
         padding: 16px 16px 100px;
+    }
+    
+    /* Mobile adjustment for hidden bottom buttons */
+    body.hide-bottom-buttons .content {
+        padding-bottom: 16px;
     }
     
     .bottom-buttons {
