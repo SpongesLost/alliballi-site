@@ -58,6 +58,110 @@ class ProgramManager {
         }
     }
 
+    exportPrograms() {
+        const exportData = {
+            version: "1.0",
+            exportDate: new Date().toISOString(),
+            programs: this.programs.map(program => ({
+                id: program.id,
+                name: program.name,
+                exercises: program.exercises,
+                sessions: program.sessions || []
+            }))
+        };
+        
+        const dataStr = JSON.stringify(exportData, null, 2);
+        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+        
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(dataBlob);
+        link.download = `fitness-programs-${new Date().toISOString().split('T')[0]}.json`;
+        link.click();
+        
+        // Clean up
+        URL.revokeObjectURL(link.href);
+        
+        return exportData;
+    }
+
+    exportSelectedPrograms(selectedPrograms) {
+        const exportData = {
+            version: "1.0",
+            exportDate: new Date().toISOString(),
+            programs: selectedPrograms.map(program => ({
+                id: program.id,
+                name: program.name,
+                exercises: program.exercises,
+                sessions: program.sessions || []
+            }))
+        };
+        
+        const dataStr = JSON.stringify(exportData, null, 2);
+        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+        
+        // Create filename based on selection
+        let filename;
+        if (selectedPrograms.length === 1) {
+            const safeName = selectedPrograms[0].name.replace(/[^a-z0-9]/gi, '-').toLowerCase();
+            filename = `fitness-program-${safeName}-${new Date().toISOString().split('T')[0]}.json`;
+        } else {
+            filename = `fitness-programs-selected-${new Date().toISOString().split('T')[0]}.json`;
+        }
+        
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(dataBlob);
+        link.download = filename;
+        link.click();
+        
+        // Clean up
+        URL.revokeObjectURL(link.href);
+        
+        return exportData;
+    }
+
+    importPrograms(importData) {
+        try {
+            // Validate import data structure
+            if (!importData || !importData.programs || !Array.isArray(importData.programs)) {
+                throw new Error('Invalid import file format');
+            }
+
+            let importedCount = 0;
+            
+            importData.programs.forEach(importProgram => {
+                // Always import programs, even if names are duplicated
+                // This allows multiple "Upper", "Lower", etc. programs
+                const newProgram = {
+                    id: Date.now() + Math.random(), // Ensure unique ID
+                    name: importProgram.name,
+                    exercises: importProgram.exercises || [],
+                    sessions: importProgram.sessions || []
+                };
+                
+                this.programs.push(newProgram);
+                importedCount++;
+            });
+            
+            if (importedCount > 0) {
+                this.savePrograms();
+            }
+            
+            return {
+                success: true,
+                imported: importedCount,
+                skipped: 0,
+                message: `Successfully imported ${importedCount} programs.`
+            };
+            
+        } catch (error) {
+            return {
+                success: false,
+                error: error.message,
+                message: 'Failed to import programs. Please check the file format.'
+            };
+        }
+    }
+
     setEditingProgramId(id) {
         this.editingProgramId = id;
     }

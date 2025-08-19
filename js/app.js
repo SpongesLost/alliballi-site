@@ -94,6 +94,18 @@ function deleteProgram(programId) {
     );
 }
 
+function exportPrograms() {
+    UIManager.exportPrograms();
+}
+
+function importPrograms() {
+    UIManager.importPrograms();
+}
+
+function handleFileImport(event) {
+    UIManager.handleFileImport(event);
+}
+
 function exitWorkout() {
     window.workoutManager.exitWorkout();
 }

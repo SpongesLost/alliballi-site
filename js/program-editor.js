@@ -509,6 +509,8 @@ class ProgramEditor {
         if (this.currentEditingExercise) {
             this.currentEditingExercise.dataset.exercise = exerciseName;
             this.currentEditingExercise.dataset.sets = sets;
+            
+            let repRange;
             if (isSeconds) {
                 this.currentEditingExercise.dataset.rangeType = 'seconds';
                 this.currentEditingExercise.dataset.secMin = secMin;
@@ -516,6 +518,7 @@ class ProgramEditor {
                 // Remove rep fields
                 delete this.currentEditingExercise.dataset.repMin;
                 delete this.currentEditingExercise.dataset.repMax;
+                repRange = { min: secMin, max: secMax, type: 'seconds' };
             } else {
                 this.currentEditingExercise.dataset.rangeType = 'reps';
                 this.currentEditingExercise.dataset.repMin = repMin;
@@ -523,7 +526,12 @@ class ProgramEditor {
                 // Remove seconds fields
                 delete this.currentEditingExercise.dataset.secMin;
                 delete this.currentEditingExercise.dataset.secMax;
+                repRange = { min: repMin, max: repMax, type: 'reps' };
             }
+            
+            // Update the repRange JSON string that saveProgram relies on
+            this.currentEditingExercise.dataset.repRange = JSON.stringify(repRange);
+            
             // Update the display
             let rangeText = '';
             if (isSeconds) {
